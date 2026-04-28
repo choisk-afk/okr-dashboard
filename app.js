@@ -145,129 +145,148 @@
   }
 
   // ─── Overview ───
+  function getAllKRs() {
+    const krs = [];
+    OKR_DATA.objectives.forEach(obj => {
+      obj.keyResults.forEach(kr => krs.push({ ...kr, objId: obj.id, objTitle: obj.title, objSub: obj.subtitle }));
+    });
+    return krs;
+  }
+
   function renderOverview() {
     const month = getCurrentMonth();
-    const overall = calcOverallRate(month);
+    const allKRs = getAllKRs();
     const counts = getStatusCounts();
 
-    let prevOverall = null;
+    const krRates = allKRs.map(kr => calcRate(kr, month)).filter(r => r !== null);
+    const avgRate = krRates.length ? r2(krRates.reduce((a, b) => a + b, 0) / krRates.length) : 0;
+    const onTrack = krRates.filter(r => r >= 90).length;
+    const atRisk = krRates.filter(r => r >= 70 && r < 90).length;
+    const offTrack = krRates.filter(r => r < 70).length;
+
+    let prevRates = null;
     if (state.currentMonthIndex > 0) {
-      prevOverall = calcOverallRate(OKR_DATA.months[state.currentMonthIndex - 1]);
+      const pm = OKR_DATA.months[state.currentMonthIndex - 1];
+      const prev = allKRs.map(kr => calcRate(kr, pm)).filter(r => r !== null);
+      prevRates = prev.length ? r2(prev.reduce((a, b) => a + b, 0) / prev.length) : 0;
     }
-    const diff = prevOverall !== null ? overall - prevOverall : null;
+    const diff = prevRates !== null ? r2(avgRate - prevRates) : null;
 
     const el = document.getElementById("overview");
     el.innerHTML = `
-      <div class="overview-grid">
+      <div class="overview-grid" style="grid-template-columns:repeat(4,1fr);">
         <div class="summary-card blue">
-          <div class="summary-label">전체 OKR 달성률</div>
-          <div class="summary-value">${overall.toFixed(2)}%</div>
+          <div class="summary-label">KR 평균 달성률</div>
+          <div class="summary-value">${avgRate.toFixed(2)}%</div>
           ${diff !== null
             ? `<div class="summary-sub ${diff >= 0 ? "trend-up" : "trend-down"}">${diff >= 0 ? "▲" : "▼"} 전월 대비 ${Math.abs(diff).toFixed(2)}%p</div>`
             : '<div class="summary-sub">첫 달 데이터</div>'}
         </div>
         <div class="summary-card green">
-          <div class="summary-label">과제 진행 현황</div>
-          <div class="summary-value">${counts.완료}<span style="font-size:18px;color:var(--text-muted)"> / ${counts.total}</span></div>
-          <div class="summary-sub">진행중 ${counts.진행중} · 계획중 ${counts.계획중}</div>
+          <div class="summary-label">순항 (≥90%)</div>
+          <div class="summary-value">${onTrack}<span style="font-size:18px;color:var(--text-muted)"> / ${allKRs.length} KR</span></div>
         </div>
         <div class="summary-card orange">
-          <div class="summary-label">Objective 수</div>
-          <div class="summary-value">${OKR_DATA.objectives.length}<span style="font-size:18px;color:var(--text-muted)">개</span></div>
-          <div class="summary-sub">KR ${OKR_DATA.objectives.reduce((s, o) => s + o.keyResults.length, 0)}개</div>
+          <div class="summary-label">주의 (70~89%)</div>
+          <div class="summary-value">${atRisk}<span style="font-size:18px;color:var(--text-muted)">개</span></div>
+        </div>
+        <div class="summary-card" style="position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--danger);"></div>
+          <div class="summary-label">미달 (<70%)</div>
+          <div class="summary-value">${offTrack}<span style="font-size:18px;color:var(--text-muted)">개</span></div>
         </div>
       </div>
 
       <div class="chart-row">
         <div class="card">
-          <div class="card-title">Objective별 달성률</div>
-          <div class="chart-container"><canvas id="objChart"></canvas></div>
+          <div class="card-title">KR별 달성률 — ${getMonthDisplayLabel(month)}</div>
+          <div class="chart-container" style="height:360px;"><canvas id="krBarChart"></canvas></div>
         </div>
         <div class="card">
-          <div class="card-title">월별 달성률 추이</div>
-          <div class="chart-container"><canvas id="trendChart"></canvas></div>
+          <div class="card-title">KR 월별 추이</div>
+          <div class="chart-container" style="height:360px;"><canvas id="trendChart"></canvas></div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">KR별 달성 현황 — ${getMonthDisplayLabel(month)}</div>
+        <div class="card-title">KR 달성 현황 — ${getMonthDisplayLabel(month)}</div>
         <div style="overflow-x:auto;">
           <table class="task-table">
             <thead>
               <tr>
-                <th>Objective</th>
                 <th>Key Result</th>
                 <th>목표</th>
                 <th>실적</th>
                 <th>달성률</th>
                 <th>추이</th>
+                <th>과제</th>
               </tr>
             </thead>
             <tbody>
-              ${OKR_DATA.objectives.map(obj =>
-                obj.keyResults.map((kr, ki) => {
-                  const d = kr.monthly[month];
-                  const rate = calcRate(kr, month);
-                  const trend = getTrend(kr, state.currentMonthIndex);
-                  const rc = rateClass(rate);
-                  return `<tr>
-                    ${ki === 0 ? `<td rowspan="${obj.keyResults.length}" style="font-weight:600;vertical-align:top;padding-top:18px;">
-                      <span style="color:var(--accent);font-weight:700;">${obj.id}</span><br>
-                      <span style="font-size:13px;">${obj.title}</span>
-                    </td>` : ""}
-                    <td style="font-size:13px;">${kr.title}</td>
-                    <td>${d ? formatDisplay(kr, d.target) : "-"}</td>
-                    <td style="font-weight:600;">${d ? formatDisplay(kr, d.actual) : "-"}</td>
-                    <td><span style="font-weight:700;color:${rateColor(rate)};">${fmtRate(rate)}</span></td>
-                    <td>${trend !== null ? `<span class="${trend >= 0 ? "trend-up" : "trend-down"}">${trend >= 0 ? "▲" : "▼"} ${Math.abs(trend).toFixed(2)}%p</span>` : "-"}</td>
-                  </tr>`;
-                }).join("")
-              ).join("")}
+              ${allKRs.map(kr => {
+                const d = kr.monthly[month];
+                const rate = calcRate(kr, month);
+                const trend = getTrend(kr, state.currentMonthIndex);
+                const taskDone = kr.tasks.filter(t => isCompleted(t.status)).length;
+                const taskTotal = kr.tasks.length;
+                return `<tr>
+                  <td>
+                    <span style="font-size:11px;color:var(--mocha,#9B7B5B);font-weight:600;">${kr.objId}</span>
+                    <div style="font-size:13px;font-weight:500;margin-top:2px;">${kr.title}</div>
+                  </td>
+                  <td>${d ? formatDisplay(kr, d.target) : "-"}</td>
+                  <td style="font-weight:600;">${d ? formatDisplay(kr, d.actual) : "-"}</td>
+                  <td><span style="font-weight:700;color:${rateColor(rate)};">${fmtRate(rate)}</span></td>
+                  <td>${trend !== null ? `<span class="${trend >= 0 ? "trend-up" : "trend-down"}">${trend >= 0 ? "▲" : "▼"} ${Math.abs(trend).toFixed(2)}%p</span>` : "-"}</td>
+                  <td><span style="font-size:13px;">${taskDone}/${taskTotal}</span></td>
+                </tr>`;
+              }).join("")}
             </tbody>
           </table>
         </div>
       </div>
     `;
 
-    renderObjChart(month);
-    renderTrendChart();
+    renderKRBarChart(month, allKRs);
+    renderTrendChart(allKRs);
   }
 
-  function renderObjChart(month) {
+  function renderKRBarChart(month, allKRs) {
     if (state.charts.obj) state.charts.obj.destroy();
-    const ctx = document.getElementById("objChart");
+    const ctx = document.getElementById("krBarChart");
     if (!ctx) return;
 
-    const labels = OKR_DATA.objectives.map(o => o.subtitle || o.title);
-    const data = OKR_DATA.objectives.map(o => calcObjectiveRate(o, month));
+    const labels = allKRs.map(kr => kr.title.length > 25 ? kr.title.slice(0, 25) + "…" : kr.title);
+    const data = allKRs.map(kr => calcRate(kr, month) || 0);
     const colors = data.map(d => d >= 90 ? "#7D9B76" : d >= 70 ? "#A47551" : "#c0564b");
 
     state.charts.obj = new Chart(ctx, {
       type: "bar",
-      data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 6, maxBarThickness: 60 }] },
+      data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 4, maxBarThickness: 32 }] },
       options: {
+        indexAxis: "y",
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-          y: { beginAtZero: true, max: 100, ticks: { callback: v => v + "%" } },
-          x: { grid: { display: false } }
+          x: { beginAtZero: true, max: 120, ticks: { callback: v => v + "%" } },
+          y: { grid: { display: false }, ticks: { font: { size: 11 } } }
         }
       }
     });
   }
 
-  function renderTrendChart() {
+  function renderTrendChart(allKRs) {
     if (state.charts.trend) state.charts.trend.destroy();
     const ctx = document.getElementById("trendChart");
     if (!ctx) return;
 
     const labels = OKR_DATA.months.map(m => OKR_DATA.monthLabels[m]);
-    const hues = ["#6B8CAE", "#7D9B76", "#A47551", "#8FA3B1"];
-    const datasets = OKR_DATA.objectives.map((obj, i) => ({
-      label: obj.subtitle || obj.title,
-      data: OKR_DATA.months.map(m => calcObjectiveRate(obj, m)),
-      borderColor: hues[i], backgroundColor: hues[i] + "20",
-      tension: 0.3, fill: false, pointRadius: 4, pointHoverRadius: 6, borderWidth: 2
+    const hues = ["#6B8CAE","#7D9B76","#A47551","#8FA3B1","#9B7B5B","#c0564b","#A8B5A0","#57534e","#6b5b95","#d4a373","#b08968"];
+    const datasets = allKRs.map((kr, i) => ({
+      label: kr.title.length > 20 ? kr.title.slice(0, 20) + "…" : kr.title,
+      data: OKR_DATA.months.map(m => calcRate(kr, m) || 0),
+      borderColor: hues[i % hues.length], backgroundColor: hues[i % hues.length] + "20",
+      tension: 0.3, fill: false, pointRadius: 3, pointHoverRadius: 5, borderWidth: 2
     }));
 
     state.charts.trend = new Chart(ctx, {
@@ -275,9 +294,9 @@
       data: { labels, datasets },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { position: "bottom", labels: { usePointStyle: true, padding: 16, font: { size: 11 } } } },
+        plugins: { legend: { position: "bottom", labels: { usePointStyle: true, padding: 12, font: { size: 10 } } } },
         scales: {
-          y: { beginAtZero: true, max: 100, ticks: { callback: v => v + "%" } },
+          y: { beginAtZero: true, max: 120, ticks: { callback: v => v + "%" } },
           x: { grid: { display: false } }
         }
       }
