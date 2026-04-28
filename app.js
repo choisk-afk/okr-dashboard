@@ -240,7 +240,7 @@
 
     const labels = OKR_DATA.objectives.map(o => o.subtitle || o.title);
     const data = OKR_DATA.objectives.map(o => calcObjectiveRate(o, month));
-    const colors = data.map(d => d >= 90 ? "#10b981" : d >= 70 ? "#f59e0b" : "#ef4444");
+    const colors = data.map(d => d >= 90 ? "#7D9B76" : d >= 70 ? "#A47551" : "#c0564b");
 
     state.charts.obj = new Chart(ctx, {
       type: "bar",
@@ -262,7 +262,7 @@
     if (!ctx) return;
 
     const labels = OKR_DATA.months.map(m => OKR_DATA.monthLabels[m]);
-    const hues = ["#4f6ef7", "#10b981", "#f59e0b", "#a78bfa"];
+    const hues = ["#6B8CAE", "#7D9B76", "#A47551", "#8FA3B1"];
     const datasets = OKR_DATA.objectives.map((obj, i) => ({
       label: obj.subtitle || obj.title,
       data: OKR_DATA.months.map(m => calcObjectiveRate(obj, m)),
