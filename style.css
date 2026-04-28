@@ -343,9 +343,14 @@ body {
 
 .kr-top {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 8px;
   margin-bottom: 12px;
+}
+
+.kr-top > div:first-child {
+  display: flex;
+  align-items: center;
 }
 
 .kr-id {
@@ -355,20 +360,24 @@ body {
   background: var(--accent-light);
   padding: 2px 8px;
   border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .kr-title {
   font-size: 15px;
   font-weight: 600;
   margin-left: 10px;
-  flex: 1;
 }
 
 .kr-numbers {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   font-size: 14px;
+  padding: 8px 14px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }
 
 .kr-target {
@@ -399,17 +408,17 @@ body {
 
 .kr-tasks {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .kr-task-tag {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 12px;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 500;
   background: #f9fafb;
   border: 1px solid var(--border);
@@ -419,6 +428,8 @@ body {
 .kr-task-tag .dept {
   color: var(--accent);
   font-weight: 600;
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .task-status {
