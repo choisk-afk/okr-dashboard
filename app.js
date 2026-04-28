@@ -231,7 +231,7 @@
                 const taskTotal = kr.tasks.length;
                 return `<tr>
                   <td>
-                    <span style="font-size:11px;color:var(--mocha,#9B7B5B);font-weight:600;">${kr.objId}</span>
+                    <span style="font-size:11px;color:var(--accent);font-weight:600;">${kr.objId}</span>
                     <div style="font-size:13px;font-weight:500;margin-top:2px;">${kr.title}</div>
                   </td>
                   <td>${d ? formatDisplay(kr, d.target) : "-"}</td>
@@ -258,7 +258,7 @@
 
     const labels = allKRs.map(kr => kr.title.length > 25 ? kr.title.slice(0, 25) + "…" : kr.title);
     const data = allKRs.map(kr => calcRate(kr, month) || 0);
-    const colors = data.map(d => d >= 90 ? "#7D9B76" : d >= 70 ? "#A47551" : "#c0564b");
+    const colors = data.map(d => d >= 90 ? "#10b981" : d >= 70 ? "#f59e0b" : "#ef4444");
 
     state.charts.obj = new Chart(ctx, {
       type: "bar",
@@ -281,7 +281,7 @@
     if (!ctx) return;
 
     const labels = OKR_DATA.months.map(m => OKR_DATA.monthLabels[m]);
-    const hues = ["#6B8CAE","#7D9B76","#A47551","#8FA3B1","#9B7B5B","#c0564b","#A8B5A0","#57534e","#6b5b95","#d4a373","#b08968"];
+    const hues = ["#4f6ef7","#10b981","#f59e0b","#a78bfa","#ec4899","#ef4444","#06b6d4","#6b7280","#8b5cf6","#f97316","#14b8a6"];
     const datasets = allKRs.map((kr, i) => ({
       label: kr.title.length > 20 ? kr.title.slice(0, 20) + "…" : kr.title,
       data: OKR_DATA.months.map(m => calcRate(kr, m) || 0),
