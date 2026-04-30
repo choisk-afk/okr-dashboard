@@ -544,7 +544,9 @@
                 <div class="org-task-item">
                   <span class="org-task-okr">${t.objId} / ${t.krId}</span>
                   <div class="org-task-info">
-                    <div class="org-task-name">${t.name}</div>
+                    ${(t.wikiLink || t.jiraLink || t.link)
+                      ? `<a class="org-task-name org-task-link" href="${t.wikiLink || t.jiraLink || t.link}" target="_blank" rel="noopener">${t.name}</a>`
+                      : `<div class="org-task-name">${t.name}</div>`}
                     <div class="org-task-status">
                       <span class="status-badge ${isCompleted(t.status) ? '과제완료' : t.status}"><span class="task-status ${isCompleted(t.status) ? '완료' : t.status}"></span>${isCompleted(t.status) ? '완료' : t.status}</span>
                     </div>

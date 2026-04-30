@@ -784,6 +784,18 @@ a.kr-task-tag:hover {
   margin-bottom: 3px;
 }
 
+.org-task-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  display: block;
+}
+
+.org-task-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .org-task-status {
   font-size: 11px;
 }
