@@ -592,6 +592,8 @@ a.kr-task-tag:hover {
   font-size: 11px;
   color: var(--text-muted);
   white-space: nowrap;
+  min-width: 80px;
+  text-align: right;
 }
 
 .kr-task-tag .dept {

@@ -426,7 +426,7 @@
                           <span class="kr-task-name">${t.name}</span>
                           ${linkBadge}
                           <span class="dept">${t.team}</span>
-                          ${dateStr ? `<span class="kr-task-date">${dateStr}</span>` : ""}
+                          <span class="kr-task-date">${dateStr || "-"}</span>
                         `;
                         return linkHref
                           ? `<a class="kr-task-tag" href="${linkHref}" target="_blank" rel="noopener">${inner}</a>`
