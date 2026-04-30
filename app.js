@@ -304,32 +304,29 @@
   }
 
   // ─── OKR Detail ───
-  const STATUS_LEGEND = [
-    { cls: "완료",    label: "과제완료" },
-    { cls: "진행중",  label: "진행중" },
-    { cls: "계획중",  label: "계획중" },
-    { cls: "홀딩",    label: "홀딩" },
-    { cls: "드랍",    label: "드랍" },
-  ];
+  function taskStatusLabel(t) {
+    const completed = isCompleted(t.status);
+    const status = completed ? "과제완료" : t.status;
+
+    let dateStr = "";
+    if (completed && t.completedDate) {
+      dateStr = t.completedDate;
+    } else if ((status === "진행중" || status === "계획중") && t.targetDate) {
+      dateStr = `~${t.targetDate}`;
+    } else if (status === "홀딩" && t.targetDate) {
+      dateStr = `${t.targetDate} 홀딩`;
+    } else if (status === "드랍" && t.targetDate) {
+      dateStr = `${t.targetDate} 드랍`;
+    }
+
+    return { status, dateStr };
+  }
 
   function renderOKRDetail() {
     const month = getCurrentMonth();
     const el = document.getElementById("okr-detail");
 
-    const legend = `
-      <div class="kr-task-legend">
-        <span class="kr-task-legend-label">과제 상태</span>
-        ${STATUS_LEGEND.map(s => `
-          <span class="kr-task-legend-item">
-            <span class="task-status ${s.cls}"></span>${s.label}
-          </span>
-        `).join("")}
-        <span class="kr-task-legend-item" style="margin-left:4px;">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="opacity:.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          링크 있음 (클릭)
-        </span>
-      </div>
-    `;
+    const legend = ``;
 
     el.innerHTML = legend + OKR_DATA.objectives.map(obj => {
       return `
@@ -400,13 +397,13 @@
                     </button>
                     <div class="kr-tasks" id="${krUid}">
                       ${kr.tasks.map(t => {
-                        const stCls = isCompleted(t.status) ? "완료" : t.status;
+                        const { status, dateStr } = taskStatusLabel(t);
                         const inner = `
-                          <span class="task-status ${stCls}"></span>
+                          <span class="task-label task-label-${status}">${status}</span>
                           <span class="kr-task-name">${t.name}</span>
                           <span class="dept">${t.team}</span>
-                          ${t.targetDate ? `<span class="kr-task-date">~${t.targetDate.slice(5)}</span>` : ""}
-                          ${t.link ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;opacity:.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>` : ""}
+                          ${dateStr ? `<span class="kr-task-date">${dateStr}</span>` : ""}
+                          ${t.link ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;opacity:.4;margin-left:2px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>` : ""}
                         `;
                         return t.link
                           ? `<a class="kr-task-tag" href="${t.link}" target="_blank" rel="noopener">${inner}</a>`
