@@ -540,19 +540,25 @@
               <div class="org-task-count">과제 ${tasks.length}건 · 완료 ${tasks.filter(t => isCompleted(t.status)).length}건 · 진행중 ${tasks.filter(t => t.status === "진행중").length}건</div>
             </div>
             <div class="org-task-list">
-              ${tasks.map(t => `
+              ${tasks.map(t => {
+                const taskLink = t.wikiLink || t.jiraLink || t.link || "";
+                const nameEl = taskLink
+                  ? `<a class="org-task-name org-task-link" href="${taskLink}" target="_blank" rel="noopener">${t.name}</a>`
+                  : `<div class="org-task-name">${t.name}</div>`;
+                const stCls = isCompleted(t.status) ? "과제완료" : t.status;
+                const stDot = isCompleted(t.status) ? "완료" : t.status;
+                const stLabel = isCompleted(t.status) ? "완료" : t.status;
+                return `
                 <div class="org-task-item">
                   <span class="org-task-okr">${t.objId} / ${t.krId}</span>
                   <div class="org-task-info">
-                    ${(t.wikiLink || t.jiraLink || t.link)
-                      ? `<a class="org-task-name org-task-link" href="${t.wikiLink || t.jiraLink || t.link}" target="_blank" rel="noopener">${t.name}</a>`
-                      : `<div class="org-task-name">${t.name}</div>`}
+                    ${nameEl}
                     <div class="org-task-status">
-                      <span class="status-badge ${isCompleted(t.status) ? '과제완료' : t.status}"><span class="task-status ${isCompleted(t.status) ? '완료' : t.status}"></span>${isCompleted(t.status) ? '완료' : t.status}</span>
+                      <span class="status-badge ${stCls}"><span class="task-status ${stDot}"></span>${stLabel}</span>
                     </div>
                   </div>
-                </div>
-              `).join("")}
+                </div>`;
+              }).join("")}
             </div>
           </div>
         `).join("")}
