@@ -371,18 +371,35 @@
                   </div>
                   ${kr.baselineLabel ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">기준: ${kr.baselineLabel}</div>` : ""}
                   ${kr.subKRs ? `
-                    <div style="margin-bottom:10px;padding:10px 14px;background:#f8fafc;border-radius:8px;border:1px solid var(--border);">
-                      <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Sub-KR 상세</div>
-                      ${kr.subKRs.map(sub => {
-                        const sd = sub.monthly[month];
-                        if (!sd) return "";
-                        const subRate = sd.t === 0 ? (sd.a === 0 ? 100 : 0) : r2((sd.a / sd.t) * 100);
-                        const subColor = subRate >= 100 ? "var(--success)" : subRate >= 90 ? "var(--warning)" : "var(--danger)";
-                        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:12px;">
-                          <span>${sub.label}</span>
-                          <span>목표 ${formatValue(sd.t, kr.unit)} → 실적 <strong style="color:${subColor}">${formatValue(sd.a, kr.unit)}</strong> <span style="color:${subColor};font-weight:600;">(${subRate.toFixed(2)}%)</span></span>
-                        </div>`;
-                      }).join("")}
+                    <div class="subkr-block">
+                      <div class="subkr-header">
+                        <span class="subkr-title-label">Sub-KR</span>
+                        <span class="subkr-month">${getMonthDisplayLabel(month)} 기준</span>
+                      </div>
+                      <div class="subkr-list">
+                        ${kr.subKRs.map(sub => {
+                          const sd = sub.monthly[month];
+                          if (!sd) return "";
+                          const subRate = sd.t === 0 ? (sd.a === 0 ? 100 : 0) : r2((sd.a / sd.t) * 100);
+                          const rc = rateClass(subRate);
+                          return `
+                            <div class="subkr-item">
+                              <div class="subkr-item-top">
+                                <span class="subkr-label">${sub.label}</span>
+                                <span class="subkr-rate ${rc}">${subRate.toFixed(2)}%</span>
+                              </div>
+                              <div class="subkr-nums">
+                                <span class="subkr-num-target">목표 <strong>${formatValue(sd.t, kr.unit)}</strong></span>
+                                <span class="subkr-num-arrow">→</span>
+                                <span class="subkr-num-actual ${rc}">실적 <strong>${formatValue(sd.a, kr.unit)}</strong></span>
+                              </div>
+                              <div class="kr-progress-bar" style="margin-bottom:0;margin-top:6px;">
+                                <div class="kr-progress-fill ${rc}" style="width:${Math.min(subRate,100)}%"></div>
+                              </div>
+                            </div>
+                          `;
+                        }).join("")}
+                      </div>
                     </div>
                   ` : ""}
                   ${kr.tasks.length > 0 ? `

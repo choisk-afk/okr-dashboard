@@ -406,6 +406,88 @@ body {
 .kr-progress-fill.mid { background: var(--warning); }
 .kr-progress-fill.low { background: var(--danger); }
 
+/* Sub-KR 블록 */
+.subkr-block {
+  margin-bottom: 16px;
+  border: 1.5px solid var(--accent);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.subkr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 16px;
+  background: var(--accent);
+}
+
+.subkr-title-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.subkr-month {
+  font-size: 11px;
+  color: rgba(255,255,255,0.75);
+}
+
+.subkr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--card-bg);
+}
+
+.subkr-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.subkr-item:last-child {
+  border-bottom: none;
+}
+
+.subkr-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.subkr-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.subkr-rate {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.subkr-rate.high { color: var(--success); }
+.subkr-rate.mid  { color: var(--warning); }
+.subkr-rate.low  { color: var(--danger); }
+
+.subkr-nums {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.subkr-num-arrow {
+  color: var(--text-muted);
+}
+
+.subkr-num-actual.high strong { color: var(--success); }
+.subkr-num-actual.mid  strong { color: var(--warning); }
+.subkr-num-actual.low  strong { color: var(--danger); }
+
 /* 과제 상태 텍스트 라벨 */
 .task-label {
   display: inline-block;
