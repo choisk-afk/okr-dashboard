@@ -609,4 +609,163 @@
   }
 
   render();
+
+  // ─── 구글시트 업데이트 ───
+  const METRICS_CSV_URL = "https://docs.google.com/spreadsheets/d/1ZfCB3XwmRPFRT446uGYrVVT29LdgJ71KlyyPBI4_KpE/export?format=csv&gid=1098880899";
+  const TASKS_CSV_URL   = "https://docs.google.com/spreadsheets/d/1j9oC2lhIt0cgOFZ7L-iEtMopsFnFUNaQQZkqxHBaSSU/export?format=csv&gid=1293403084";
+
+  // actual: col 14~19 (1~6월), target: col 26~31 (1~6월)
+  const MONTH_KEYS = ["2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"];
+  const ACTUAL_COLS = [14,15,16,17,18,19];
+  const TARGET_COLS = [26,27,28,29,30,31];
+
+  // 월별 수치 시트 행 인덱스 (0-based)
+  const KR_ROW = {
+    "KR1-1": 5,  "KR1-2": 10, "KR1-3": 14,
+    "KR2-1": 18, "KR2-2": 19,
+    "KR3-1": 21, "KR3-2": 22, "KR3-3": 24,
+    "KR4-1": 31, "KR4-2": 37, "KR4-3": 38, "KR4-4": 39
+  };
+
+  // Sub-KR 행 인덱스
+  const SUBKR_ROW = {
+    "KR1-1": [6,7,8,9],    // 카드/계좌/머니/휴대폰
+    "KR1-3": [15,16],       // 배민상품권/외부교환권
+    "KR3-3": [25,26,27,28,29], // 팀별 CS
+    "KR4-1": [32,33,34,35]  // 팀별 운영시간
+  };
+
+  function parseCSV(text) {
+    return text.split("\n").map(line => {
+      const cols = []; let cur = "", inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        if (line[i] === '"') { inQ = !inQ; continue; }
+        if (line[i] === "," && !inQ) { cols.push(cur.trim()); cur = ""; continue; }
+        cur += line[i];
+      }
+      cols.push(cur.trim());
+      return cols;
+    });
+  }
+
+  function toNum(s) {
+    if (!s) return null;
+    const n = parseFloat(s.replace(/[%$,\s원시간건]/g, "").replace(",", ""));
+    return isNaN(n) ? null : n;
+  }
+
+  function detectMonths(rows) {
+    // 실 KR 행(5)의 actual 컬럼에 값 있는 월만 추출
+    const base = rows[5] || [];
+    const available = [];
+    ACTUAL_COLS.forEach((col, i) => {
+      if (toNum(base[col]) !== null) available.push(MONTH_KEYS[i]);
+    });
+    return available;
+  }
+
+  function getLabel(m) {
+    const [,mm] = m.split("-");
+    return parseInt(mm) + "월";
+  }
+
+  window.updateFromSheets = async function () {
+    const btn = document.getElementById("update-btn");
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg> 불러오는 중...';
+
+    try {
+      const [mRes, tRes] = await Promise.all([
+        fetch(METRICS_CSV_URL), fetch(TASKS_CSV_URL)
+      ]);
+      if (!mRes.ok || !tRes.ok) throw new Error("시트 접근 실패 — 공개 공유 여부를 확인해주세요.");
+
+      const [mCSV, tCSV] = await Promise.all([mRes.text(), tRes.text()]);
+      const mRows = parseCSV(mCSV);
+      const tRows = parseCSV(tCSV);
+
+      // 1. 사용 가능한 월 업데이트
+      const months = detectMonths(mRows);
+      if (!months.length) throw new Error("수치 데이터 없음 — 시트를 확인해주세요.");
+      OKR_DATA.months = months;
+      OKR_DATA.monthLabels = {};
+      months.forEach(m => OKR_DATA.monthLabels[m] = getLabel(m));
+
+      // 2. 각 KR 월별 수치 업데이트
+      OKR_DATA.objectives.forEach(obj => {
+        obj.keyResults.forEach(kr => {
+          const rowIdx = KR_ROW[kr.id];
+          if (rowIdx === undefined) return;
+          const row = mRows[rowIdx];
+          if (!row) return;
+
+          kr.monthly = {};
+          months.forEach((m, i) => {
+            const a = toNum(row[ACTUAL_COLS[i]]);
+            const t = toNum(row[TARGET_COLS[i]]);
+            if (a !== null || t !== null) {
+              kr.monthly[m] = { actual: a ?? 0, target: t ?? 0 };
+            }
+          });
+
+          // Sub-KR 업데이트
+          if (kr.subKRs && SUBKR_ROW[kr.id]) {
+            SUBKR_ROW[kr.id].forEach((subRowIdx, si) => {
+              if (!kr.subKRs[si]) return;
+              const sRow = mRows[subRowIdx] || [];
+              kr.subKRs[si].monthly = {};
+              months.forEach((m, i) => {
+                const a = toNum(sRow[ACTUAL_COLS[i]]);
+                const t = toNum(sRow[TARGET_COLS[i]]);
+                if (a !== null || t !== null) {
+                  kr.subKRs[si].monthly[m] = { a: a ?? 0, t: t ?? 0 };
+                }
+              });
+            });
+          }
+        });
+      });
+
+      // 3. 과제 상태 업데이트 (결제정산프로덕트실 행, col4=실, col7=과제명, col27=상태, col22=목표일, col23=완료일)
+      const taskMap = {};
+      tRows.forEach(row => {
+        if (row[4] && row[4].includes("결제정산") && row[7]) {
+          taskMap[row[7].trim()] = { status: row[27] || "", targetDate: row[22] || "", completedDate: row[23] || "" };
+        }
+      });
+
+      OKR_DATA.objectives.forEach(obj => {
+        obj.keyResults.forEach(kr => {
+          kr.tasks.forEach(t => {
+            const match = taskMap[t.name.trim()];
+            if (!match) return;
+            if (match.status) t.status = match.status.trim();
+            if (match.targetDate) t.targetDate = match.targetDate.replace(/\./g, "-").replace(/\s/g, "").replace(/-+$/, "").replace(/^(\d{4})-(\d{1,2})-(\d{1,2})$/, (_, y,m,d) => `${y}-${m.padStart(2,"0")}-${d.padStart(2,"0")}`);
+            if (match.completedDate) t.completedDate = match.completedDate.replace(/\./g, "-").replace(/\s/g, "").replace(/-+$/, "").replace(/^(\d{4})-(\d{1,2})-(\d{1,2})$/, (_, y,m,d) => `${y}-${m.padStart(2,"0")}-${d.padStart(2,"0")}`);
+          });
+        });
+      });
+
+      // 4. 최신 월로 이동 후 재렌더
+      state.currentMonthIndex = OKR_DATA.months.length - 1;
+      render();
+
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 업데이트 완료';
+      btn.style.background = "#10b981";
+      setTimeout(() => {
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg> 업데이트';
+        btn.style.background = "#4f6ef7";
+        btn.disabled = false;
+      }, 2500);
+
+    } catch (e) {
+      btn.innerHTML = "⚠ 실패: " + e.message;
+      btn.style.background = "#ef4444";
+      setTimeout(() => {
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg> 업데이트';
+        btn.style.background = "#4f6ef7";
+        btn.disabled = false;
+      }, 4000);
+    }
+  };
 })();
