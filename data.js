@@ -32,6 +32,8 @@ const OKR_DATA = {
             { label: "휴대폰 점유율", monthly: { "2026-01": { t: 0.0, a: 0.0 }, "2026-02": { t: 0.0, a: 0.0 }, "2026-03": { t: 0.3, a: 0.0 } } }
           ],
           tasks: [
+            // 링크 추가 방법: jiraLink, wikiLink 필드에 URL 입력
+            // 예) { id: "T1", ..., jiraLink: "https://woowahanbros.atlassian.net/browse/XXX-123", wikiLink: "https://cloud.wiki.woowa.in/..." }
             { id: "T1", name: "배민클럽 구독자 배민페이머니 결제 시 포인트 추가 적립 프로모션", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-04-28", owner: "김혜정" },
             { id: "T2", name: "배민클럽 비구독자 배민페이머니 확대 실험", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-04-28", owner: "김혜정" },
             { id: "T3", name: "배민페이머니를 활용한 더치페이", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-06-04", owner: "허난영" },
