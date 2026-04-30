@@ -530,40 +530,34 @@
       });
     });
 
+    function renderOrgTask(t) {
+      const taskLink = t.wikiLink || t.jiraLink || t.link || "";
+      const nameEl = taskLink
+        ? '<a class="org-task-name org-task-link" href="' + taskLink + '" target="_blank" rel="noopener">' + t.name + '</a>'
+        : '<div class="org-task-name">' + t.name + '</div>';
+      const stCls = isCompleted(t.status) ? "과제완료" : t.status;
+      const stDot = isCompleted(t.status) ? "완료" : t.status;
+      const stLabel = isCompleted(t.status) ? "완료" : t.status;
+      return '<div class="org-task-item">'
+        + '<span class="org-task-okr">' + t.objId + ' / ' + t.krId + '</span>'
+        + '<div class="org-task-info">'
+        + nameEl
+        + '<div class="org-task-status">'
+        + '<span class="status-badge ' + stCls + '"><span class="task-status ' + stDot + '"></span>' + stLabel + '</span>'
+        + '</div></div></div>';
+    }
+
+    function renderOrgCard(team, tasks) {
+      return '<div class="org-card">'
+        + '<div class="org-card-header"><h3>' + team + '</h3>'
+        + '<div class="org-task-count">과제 ' + tasks.length + '건 · 완료 ' + tasks.filter(t => isCompleted(t.status)).length + '건 · 진행중 ' + tasks.filter(t => t.status === "진행중").length + '건</div>'
+        + '</div>'
+        + '<div class="org-task-list">' + tasks.map(renderOrgTask).join("") + '</div>'
+        + '</div>';
+    }
+
     const el = document.getElementById("org-view");
-    el.innerHTML = `
-      <div class="org-grid">
-        ${Object.entries(teamMap).map(([team, tasks]) => `
-          <div class="org-card">
-            <div class="org-card-header">
-              <h3>${team}</h3>
-              <div class="org-task-count">과제 ${tasks.length}건 · 완료 ${tasks.filter(t => isCompleted(t.status)).length}건 · 진행중 ${tasks.filter(t => t.status === "진행중").length}건</div>
-            </div>
-            <div class="org-task-list">
-              ${tasks.map(t => {
-                const taskLink = t.wikiLink || t.jiraLink || t.link || "";
-                const nameEl = taskLink
-                  ? `<a class="org-task-name org-task-link" href="${taskLink}" target="_blank" rel="noopener">${t.name}</a>`
-                  : `<div class="org-task-name">${t.name}</div>`;
-                const stCls = isCompleted(t.status) ? "과제완료" : t.status;
-                const stDot = isCompleted(t.status) ? "완료" : t.status;
-                const stLabel = isCompleted(t.status) ? "완료" : t.status;
-                return `
-                <div class="org-task-item">
-                  <span class="org-task-okr">${t.objId} / ${t.krId}</span>
-                  <div class="org-task-info">
-                    ${nameEl}
-                    <div class="org-task-status">
-                      <span class="status-badge ${stCls}"><span class="task-status ${stDot}"></span>${stLabel}</span>
-                    </div>
-                  </div>
-                </div>`;
-              }).join("")}
-            </div>
-          </div>
-        `).join("")}
-      </div>
-    `;
+    el.innerHTML = '<div class="org-grid">' + Object.entries(teamMap).map(([team, tasks]) => renderOrgCard(team, tasks)).join("") + '</div>';
   }
 
   // ─── AI Report ───
