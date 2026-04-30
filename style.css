@@ -785,15 +785,14 @@ a.kr-task-tag:hover {
 }
 
 .org-task-link {
-  color: var(--text-primary);
-  text-decoration: none;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
   display: block;
 }
 
 .org-task-link:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  opacity: 0.75;
 }
 
 .org-task-status {
