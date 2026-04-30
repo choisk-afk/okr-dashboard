@@ -32,13 +32,11 @@ const OKR_DATA = {
             { label: "휴대폰 점유율", monthly: { "2026-01": { t: 0.0, a: 0.0 }, "2026-02": { t: 0.0, a: 0.0 }, "2026-03": { t: 0.3, a: 0.0 } } }
           ],
           tasks: [
-            // 링크 추가 방법: jiraLink, wikiLink 필드에 URL 입력
-            // 예) { id: "T1", ..., jiraLink: "https://woowahanbros.atlassian.net/browse/XXX-123", wikiLink: "https://cloud.wiki.woowa.in/..." }
-            { id: "T1", name: "배민클럽 구독자 배민페이머니 결제 시 포인트 추가 적립 프로모션", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-04-28", owner: "김혜정" },
-            { id: "T2", name: "배민클럽 비구독자 배민페이머니 확대 실험", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-04-28", owner: "김혜정" },
-            { id: "T3", name: "배민페이머니를 활용한 더치페이", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-06-04", owner: "허난영" },
-            { id: "T4", name: "배민페이머니 소멸 알림 도입", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-02-25", completedDate: "2026-02-25", owner: "형성현" },
-            { id: "T5", name: "배민페이에 휴대폰 간편결제 추가", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-05-07", owner: "양아영" }
+            { id: "T1", name: "배민클럽 구독자 배민페이머니 결제 시 포인트 추가 적립 프로모션", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-04-28", owner: "김혜정", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/tazDOQ" },
+            { id: "T2", name: "배민클럽 비구독자 배민페이머니 확대 실험", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-04-28", owner: "김혜정", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/FtvMPg" },
+            { id: "T3", name: "배민페이머니를 활용한 더치페이", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-06-04", owner: "허난영", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/hBeiMw" },
+            { id: "T4", name: "배민페이머니 소멸 알림 도입", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-02-25", completedDate: "2026-02-25", owner: "형성현", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/BYHJNw" },
+            { id: "T5", name: "배민페이에 휴대폰 간편결제 추가", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-05-07", owner: "양아영", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/oV9PL" }
           ]
         },
         {
@@ -54,9 +52,9 @@ const OKR_DATA = {
             "2026-03": { target: 7.0, actual: 5.1 }
           },
           tasks: [
-            { id: "T6", name: "배민포인트 지급 당일 소멸 기능 구현", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-02-11", completedDate: "2026-02-11", owner: "김혜정" },
+            { id: "T6", name: "배민포인트 지급 당일 소멸 기능 구현", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-02-11", completedDate: "2026-02-11", owner: "김혜정", jiraLink: "https://cloud.jira.woowa.in/browse/PAYPRODUCT-8033" },
             { id: "T7", name: "포인트 함 지면 개편 및 고도화", team: "배민페이플랫폼팀", status: "계획중", owner: "김혜정" },
-            { id: "T8", name: "배민포인트 프리퀀시 고도화 대응", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-04-07", completedDate: "2026-04-13", owner: "전태준" }
+            { id: "T8", name: "배민포인트 프리퀀시 고도화 대응", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-04-07", completedDate: "2026-04-13", owner: "전태준", jiraLink: "https://cloud.jira.woowa.in/browse/PAYPRODUCT-8446" }
           ]
         },
         {
@@ -76,11 +74,11 @@ const OKR_DATA = {
             { label: "외부 교환권 사용 주문수", monthly: { "2026-01": { t: 90000, a: 90423 }, "2026-02": { t: 200500, a: 168877 }, "2026-03": { t: 318900, a: 237173 } } }
           ],
           tasks: [
-            { id: "T9", name: "선물하기 홈 카테고리/상품 위젯 개선 실험", team: "배민선물하기팀", status: "진행중", targetDate: "2026-04-02", completedDate: "2026-04-30", owner: "박성현" },
+            { id: "T9", name: "선물하기 홈 카테고리/상품 위젯 개선 실험", team: "배민선물하기팀", status: "진행중", targetDate: "2026-04-02", completedDate: "2026-04-30", owner: "박성현", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/GIFT/pages/966886555/2026-01+-" },
             { id: "T10", name: "외부교환권 배민 내 사용 대행사 추가 연동 (다우기술 - 컴포즈커피)", team: "배민선물하기팀", status: "진행중", targetDate: "2026-05-07", owner: "박성현" },
             { id: "T11", name: "외부교환권 기 연동 대행사 보유 브랜드 추가 (던킨, 파스쿠찌, 쉐이크쉑)", team: "배민선물하기팀", status: "계획중", targetDate: "2026-05-14", owner: "박성현" },
-            { id: "T12", name: "주문서 내 선물하기 상품권 1뎁스 노출 API 제공", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-03-03", completedDate: "2026-03-03", owner: "최중현" },
-            { id: "T13", name: "배민클럽 바우처 SAP 연동", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-03-19", completedDate: "2026-03-19", owner: "신지혜" }
+            { id: "T12", name: "주문서 내 선물하기 상품권 1뎁스 노출 API 제공", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-03-03", completedDate: "2026-03-03", owner: "최중현", jiraLink: "https://cloud.jira.woowa.in/browse/BMGIFT-10920" },
+            { id: "T13", name: "배민클럽 바우처 SAP 연동", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-03-19", completedDate: "2026-03-19", owner: "신지혜", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/GIFT/pages/968857825" }
           ]
         }
       ]
@@ -103,17 +101,17 @@ const OKR_DATA = {
             "2026-03": { target: 0, actual: 0 }
           },
           tasks: [
-            { id: "T14", name: "즉시할인 타임세일 API 정책 변경 대응", team: "결제허브팀", status: "과제완료", targetDate: "2026-04-01", completedDate: "2026-04-01", owner: "설소영, 김윤정" },
-            { id: "T15", name: "기준수수료, 과제코드 연동을 통한 비용집계 자동화 대응", team: "결제허브팀", status: "진행중", targetDate: "2026-04-09", owner: "임상혁, 신영민" },
-            { id: "T16", name: "메뉴할인분담금, 메뉴쿠폰 안분계산기 연동 효율화", team: "결제허브팀", status: "과제완료", targetDate: "2026-01-27", completedDate: "2026-01-27", owner: "설소영, 김윤정" },
-            { id: "T17", name: "DSM 신규요금 체계 V3 정산 자동화", team: "정산플랫폼팀", status: "과제완료", targetDate: "2026-03-31", completedDate: "2026-03-31", owner: "황혜진" },
-            { id: "T18", name: "수수료 비용 집계 자동화", team: "정산플랫폼팀", status: "과제완료", targetDate: "2026-03-31", completedDate: "2026-04-01", owner: "박연화" },
-            { id: "T19", name: "라이더 - 로드러너 전환 - 정산 서비스 이관", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-03-31", owner: "김초롱" },
-            { id: "T20", name: "배민클럽 장기 상품 - 정기결제 시스템 대응", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-02-24", completedDate: "2026-02-24", owner: "장우진" },
-            { id: "T21", name: "결제 관련 지면 다국어 대응", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-03-12", completedDate: "2026-03-12", owner: "장우진" },
-            { id: "T22", name: "배민클럽 배민페이머니 프로모션 - 결제 대응", team: "결제플랫폼팀", status: "진행중", targetDate: "2026-04-28", completedDate: "2026-04-02", owner: "장우진" },
-            { id: "T23", name: "주문서 > 선물함 다국어 대응", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-03-31", completedDate: "2026-03-31", owner: "송채원" },
-            { id: "T24", name: "다국어 대응 - 배민페이, 배민포인트, 배민페이머니", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-03-24", completedDate: "2026-04-03", owner: "주지민" }
+            { id: "T14", name: "즉시할인 타임세일 API 정책 변경 대응", team: "결제허브팀", status: "과제완료", targetDate: "2026-04-01", completedDate: "2026-04-01", owner: "설소영, 김윤정", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/925664219/PJ+202601+-" },
+            { id: "T15", name: "기준수수료, 과제코드 연동을 통한 비용집계 자동화 대응", team: "결제허브팀", status: "진행중", targetDate: "2026-04-09", owner: "임상혁, 신영민", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/1005437529/260226" },
+            { id: "T16", name: "메뉴할인분담금, 메뉴쿠폰 안분계산기 연동 효율화", team: "결제허브팀", status: "과제완료", targetDate: "2026-01-27", completedDate: "2026-01-27", owner: "설소영, 김윤정", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/936379778/PJ+202512+-" },
+            { id: "T17", name: "DSM 신규요금 체계 V3 정산 자동화", team: "정산플랫폼팀", status: "과제완료", targetDate: "2026-03-31", completedDate: "2026-03-31", owner: "황혜진", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/978661942/260204+DSM+V3" },
+            { id: "T18", name: "수수료 비용 집계 자동화", team: "정산플랫폼팀", status: "과제완료", targetDate: "2026-03-31", completedDate: "2026-04-01", owner: "박연화", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/800556575/250812" },
+            { id: "T19", name: "라이더 - 로드러너 전환 - 정산 서비스 이관", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-03-31", owner: "김초롱", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/762417108/20250708+-" },
+            { id: "T20", name: "배민클럽 장기 상품 - 정기결제 시스템 대응", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-02-24", completedDate: "2026-02-24", owner: "장우진", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/943391450/260108" },
+            { id: "T21", name: "결제 관련 지면 다국어 대응", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-03-12", completedDate: "2026-03-12", owner: "장우진", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/965138791/260126" },
+            { id: "T22", name: "배민클럽 배민페이머니 프로모션 - 결제 대응", team: "결제플랫폼팀", status: "진행중", targetDate: "2026-04-28", completedDate: "2026-04-02", owner: "장우진", jiraLink: "https://cloud.jira.woowa.in/browse/COREPAY-9421" },
+            { id: "T23", name: "주문서 > 선물함 다국어 대응", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-03-31", completedDate: "2026-03-31", owner: "송채원", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/GIFT/pages/1000821939" },
+            { id: "T24", name: "다국어 대응 - 배민페이, 배민포인트, 배민페이머니", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-03-24", completedDate: "2026-04-03", owner: "주지민", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/BG4xOw" }
           ]
         },
         {
@@ -129,7 +127,7 @@ const OKR_DATA = {
             "2026-03": { target: 1, actual: 0 }
           },
           tasks: [
-            { id: "T25", name: "배민페이-휴대폰 도입", team: "결제플랫폼팀", status: "진행중", owner: "장우진" },
+            { id: "T25", name: "배민페이-휴대폰 도입", team: "결제플랫폼팀", status: "진행중", owner: "장우진", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/828420679/250609" },
             { id: "T26", name: "식권 결제수단 연동", team: "결제플랫폼팀", status: "계획중", owner: "한다솜" },
             { id: "T27", name: "지역화폐 결제수단 제공", team: "결제플랫폼팀", status: "계획중", owner: "한다솜" },
             { id: "T28", name: "온누리상품권 결제수단 제공", team: "결제플랫폼팀", status: "계획중", owner: "한다솜" },
@@ -157,13 +155,13 @@ const OKR_DATA = {
             "2026-03": { target: 99.08, actual: 99.04 }
           },
           tasks: [
-            { id: "T31", name: "배민페이 전 지면 보안키패드 입력 시 햅틱 반응 적용", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-02-10", completedDate: "2026-02-10", owner: "형성현" },
-            { id: "T32", name: "영구 사용 불가 배민페이카드 자동 비활성화 처리 - 현대카드", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-03-10", completedDate: "2026-03-10", owner: "형성현" },
-            { id: "T33", name: "배민페이계좌 비활성화 적용 승인 실패 에러코드 확대", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-03-17", completedDate: "2026-03-17", owner: "형성현" },
-            { id: "T34", name: "영구 사용 불가 배민페이카드 자동 비활성화 처리(OTC 인증 방식)", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-04-28", owner: "형성현" },
-            { id: "T35", name: "장애대응 자동화 Phase3", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-04-02", completedDate: "2026-04-02", owner: "장우진" },
+            { id: "T31", name: "배민페이 전 지면 보안키패드 입력 시 햅틱 반응 적용", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-02-10", completedDate: "2026-02-10", owner: "형성현", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/f746Og" },
+            { id: "T32", name: "영구 사용 불가 배민페이카드 자동 비활성화 처리 - 현대카드", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-03-10", completedDate: "2026-03-10", owner: "형성현", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/ZYYnOw" },
+            { id: "T33", name: "배민페이계좌 비활성화 적용 승인 실패 에러코드 확대", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-03-17", completedDate: "2026-03-17", owner: "형성현", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/HOGDNQ" },
+            { id: "T34", name: "영구 사용 불가 배민페이카드 자동 비활성화 처리(OTC 인증 방식)", team: "배민페이플랫폼팀", status: "진행중", targetDate: "2026-04-28", owner: "형성현", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/KgBAPQ" },
+            { id: "T35", name: "장애대응 자동화 Phase3", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-04-02", completedDate: "2026-04-02", owner: "장우진", jiraLink: "https://cloud.jira.woowa.in/browse/COREPAY-9430" },
             { id: "T36", name: "장애대응 자동 고도화", team: "결제플랫폼팀", status: "계획중", owner: "장우진" },
-            { id: "T37", name: "배민페이 계좌 딤드 대상 오픈뱅킹 코드 추가", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-03-17", completedDate: "2026-03-17", owner: "정연희" }
+            { id: "T37", name: "배민페이 계좌 딤드 대상 오픈뱅킹 코드 추가", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-03-17", completedDate: "2026-03-17", owner: "정연희", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/1001304031/260225" }
           ]
         },
         {
@@ -203,12 +201,12 @@ const OKR_DATA = {
             { label: "배민선물하기팀 (3,575→2,500건)", monthly: { "2026-01": { t: 564, a: 564 }, "2026-02": { t: 1070, a: 1083 }, "2026-03": { t: 1420, a: 1539 } } }
           ],
           tasks: [
-            { id: "T38", name: "배민회원정보 변경 시 배민페이 회원 정보 동기화", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-01-13", completedDate: "2026-01-13", owner: "김혜정" },
-            { id: "T39", name: "결제 이상거래 케이스 분석 및 선제 대응 방안 제안", team: "결제허브팀", status: "진행중", targetDate: "2026-06-30", owner: "나은희" },
+            { id: "T38", name: "배민회원정보 변경 시 배민페이 회원 정보 동기화", team: "배민페이플랫폼팀", status: "과제완료", targetDate: "2026-01-13", completedDate: "2026-01-13", owner: "김혜정", wikiLink: "https://cloud.wiki.woowa.in/wiki/x/qgzNMw" },
+            { id: "T39", name: "결제 이상거래 케이스 분석 및 선제 대응 방안 제안", team: "결제허브팀", status: "진행중", targetDate: "2026-06-30", owner: "나은희", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/960437308/260219" },
             { id: "T40", name: "해외카드결제 민원 발생 원인 분석 및 대응", team: "결제허브팀", status: "진행중", targetDate: "2026-06-30", owner: "정신호" },
-            { id: "T41", name: "선물하기 상품권 수신자 셀프 환불 도입", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-03-19", completedDate: "2026-03-19", owner: "김희선" },
+            { id: "T41", name: "선물하기 상품권 수신자 셀프 환불 도입", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-03-19", completedDate: "2026-03-19", owner: "김희선", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/GIFT/pages/988841006/2026-03" },
             { id: "T42", name: "서비스 UX 개선 - 고객향 안내 강화", team: "배민선물하기팀", status: "계획중", targetDate: "2026-04-30", owner: "김희선" },
-            { id: "T43", name: "채권압류 및 정산보류/해제 프로세스 개선", team: "정산플랫폼팀", status: "계획중", targetDate: "2026-06-30" }
+            { id: "T43", name: "채권압류 및 정산보류/해제 프로세스 개선", team: "정산플랫폼팀", status: "계획중", targetDate: "2026-06-30", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/1100479269/260420" }
           ]
         }
       ]
@@ -238,11 +236,11 @@ const OKR_DATA = {
             { label: "결제웹프론트 선물하기/정산 (2,178→845h)", monthly: { "2026-01": { t: 2178, a: 2178 }, "2026-02": { t: 2178, a: 2178 }, "2026-03": { t: 1465, a: 2178 } } }
           ],
           tasks: [
-            { id: "T44", name: "PG 부분취소 대사 처리 자동화", team: "결제허브팀", status: "과제완료", targetDate: "2026-03-20", completedDate: "2026-03-20", owner: "김재준" },
-            { id: "T45", name: "주문-결제 정합성 확인 어드민 구축", team: "결제허브팀", status: "진행중", targetDate: "2026-05-22", owner: "정신호, 신영민" },
+            { id: "T44", name: "PG 부분취소 대사 처리 자동화", team: "결제허브팀", status: "과제완료", targetDate: "2026-03-20", completedDate: "2026-03-20", owner: "김재준", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/1015284361" },
+            { id: "T45", name: "주문-결제 정합성 확인 어드민 구축", team: "결제허브팀", status: "진행중", targetDate: "2026-05-22", owner: "정신호, 신영민", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/886912020/-" },
             { id: "T46", name: "결제 작업공지 전파 자동화 (n8n)", team: "결제허브팀", status: "진행중", targetDate: "2026-04-30", owner: "정신호, 배지영" },
-            { id: "T47", name: "상품권 예외 환불/연장 기능 추가", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-02-12", completedDate: "2026-02-12", owner: "김희선" },
-            { id: "T48", name: "오픈뱅킹 결제대사 개선", team: "결제플랫폼팀", status: "진행중", targetDate: "2026-05-15", owner: "최유성" },
+            { id: "T47", name: "상품권 예외 환불/연장 기능 추가", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-02-12", completedDate: "2026-02-12", owner: "김희선", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/GIFT/pages/939655767/2026-02" },
+            { id: "T48", name: "오픈뱅킹 결제대사 개선", team: "결제플랫폼팀", status: "진행중", targetDate: "2026-05-15", owner: "최유성", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/1004885549" },
             { id: "T49", name: "채권압류서류 분류 자동화", team: "결제웹프론트개발팀", status: "진행중", targetDate: "2026-06-30", owner: "안현철" },
             { id: "T50", name: "선물하기 VoC 자동화", team: "결제웹프론트개발팀", status: "진행중", targetDate: "2026-06-30", owner: "박지은" }
           ]
@@ -278,8 +276,8 @@ const OKR_DATA = {
             "2026-03": { target: 88, actual: 95 }
           },
           tasks: [
-            { id: "T54", name: "배민스토어 결제정보처리시스템 연동 (매입 기능 전환)", team: "결제허브팀", status: "과제완료", targetDate: "2026-02-11", completedDate: "2026-02-11", owner: "설소영, 강성효" },
-            { id: "T55", name: "배민스토어 결제정보처리시스템 연동 (결제 기능 전환)", team: "결제허브팀", status: "진행중", targetDate: "2026-04-30", owner: "나은희, 임상혁" }
+            { id: "T54", name: "배민스토어 결제정보처리시스템 연동 (매입 기능 전환)", team: "결제허브팀", status: "과제완료", targetDate: "2026-02-11", completedDate: "2026-02-11", owner: "설소영, 강성효", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/612217763/8+LaaS+-+-" },
+            { id: "T55", name: "배민스토어 결제정보처리시스템 연동 (결제 기능 전환)", team: "결제허브팀", status: "진행중", targetDate: "2026-04-30", owner: "나은희, 임상혁", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/723856565/01-1.+-" }
           ]
         },
         {
@@ -297,13 +295,13 @@ const OKR_DATA = {
             "2026-03": { target: 314400, actual: 330763 }
           },
           tasks: [
-            { id: "T56", name: "현금영수증 시스템 통합", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-04-14", completedDate: "2026-04-14", owner: "장우진" },
-            { id: "T57", name: "빌링어드민 이관", team: "결제플랫폼팀", status: "진행중", targetDate: "2026-05-01", owner: "한다솜" },
+            { id: "T56", name: "현금영수증 시스템 통합", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-04-14", completedDate: "2026-04-14", owner: "장우진", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/977472373" },
+            { id: "T57", name: "빌링어드민 이관", team: "결제플랫폼팀", status: "진행중", targetDate: "2026-05-01", owner: "한다솜", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/984446390" },
             { id: "T58", name: "배치플랫폼 전환", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-03-18", completedDate: "2026-03-18", owner: "최유성" },
             { id: "T59", name: "빌링마트 F/O 및 결제정보처리시스템으로 기능 전환", team: "결제허브팀", status: "진행중", targetDate: "2026-06-30", owner: "권유삼, 나은희" },
-            { id: "T60", name: "정산시스템 배치플랫폼 전환", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-09-30", owner: "권세희" },
-            { id: "T61", name: "비용절감 - 배치 개선 (베타 서버)", team: "정산플랫폼팀", status: "과제완료", targetDate: "2026-04-30", completedDate: "2026-04-06", owner: "정용준" },
-            { id: "T62", name: "비용절감 - 배치 개선 (운영 서버)", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-06-30", owner: "정용준" },
+            { id: "T60", name: "정산시스템 배치플랫폼 전환", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-09-30", owner: "권세희", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/860214265/251001" },
+            { id: "T61", name: "비용절감 - 배치 개선 (베타 서버)", team: "정산플랫폼팀", status: "과제완료", targetDate: "2026-04-30", completedDate: "2026-04-06", owner: "정용준", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/973648191/260121" },
+            { id: "T62", name: "비용절감 - 배치 개선 (운영 서버)", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-06-30", owner: "정용준", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/973648191/260121" },
             { id: "T63", name: "정산시스템 k8s 전환", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-06-30", owner: "이소진" }
           ]
         }

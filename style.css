@@ -921,6 +921,28 @@ a.kr-task-tag:hover {
 
 .task-link-btn:hover { opacity: 0.75; }
 
+/* 과제 태그 내 링크 배지 */
+.task-link-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.task-link-badge.wiki {
+  background: #e6f0ff;
+  color: #0065FF;
+  border: 1px solid #b3d0ff;
+}
+
+.task-link-badge.jira {
+  background: #e6eeff;
+  color: #0052CC;
+  border: 1px solid #c5d5f5;
+}
+
 .task-link-btn.jira {
   background: #e6eeff;
   color: #0052CC;

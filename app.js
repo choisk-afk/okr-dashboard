@@ -415,15 +415,21 @@
                     <div class="kr-tasks" id="${krUid}">
                       ${kr.tasks.map(t => {
                         const { status, dateStr } = taskStatusLabel(t);
+                        const linkHref = t.wikiLink || t.jiraLink || t.link || "";
+                        const linkBadge = t.wikiLink
+                          ? `<span class="task-link-badge wiki">Wiki</span>`
+                          : t.jiraLink
+                          ? `<span class="task-link-badge jira">Jira</span>`
+                          : "";
                         const inner = `
                           <span class="task-label task-label-${status}">${status}</span>
                           <span class="kr-task-name">${t.name}</span>
+                          ${linkBadge}
                           <span class="dept">${t.team}</span>
                           ${dateStr ? `<span class="kr-task-date">${dateStr}</span>` : ""}
-                          ${t.link ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;opacity:.4;margin-left:2px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>` : ""}
                         `;
-                        return t.link
-                          ? `<a class="kr-task-tag" href="${t.link}" target="_blank" rel="noopener">${inner}</a>`
+                        return linkHref
+                          ? `<a class="kr-task-tag" href="${linkHref}" target="_blank" rel="noopener">${inner}</a>`
                           : `<div class="kr-task-tag">${inner}</div>`;
                       }).join("")}
                     </div>
@@ -486,8 +492,9 @@
                     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                       <span style="font-weight:500;flex:1;min-width:0;">${t.name}</span>
                       <div style="display:flex;gap:5px;flex-shrink:0;">
-                        ${t.jiraLink ? `<a href="${t.jiraLink}" target="_blank" rel="noopener" class="task-link-btn jira" title="Jira">${jiraIcon} Jira</a>` : ""}
-                        ${t.wikiLink ? `<a href="${t.wikiLink}" target="_blank" rel="noopener" class="task-link-btn wiki" title="Wiki">${wikiIcon} Wiki</a>` : ""}
+                        ${t.jiraLink ? `<a href="${t.jiraLink}" target="_blank" rel="noopener" class="task-link-btn jira">${jiraIcon} Jira</a>` : ""}
+                        ${t.wikiLink ? `<a href="${t.wikiLink}" target="_blank" rel="noopener" class="task-link-btn wiki">${wikiIcon} Wiki</a>` : ""}
+                        ${t.link && !t.jiraLink && !t.wikiLink ? `<a href="${t.link}" target="_blank" rel="noopener" class="task-link-btn wiki">${wikiIcon} 링크</a>` : ""}
                       </div>
                     </div>
                   </td>
