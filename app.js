@@ -478,26 +478,18 @@
                 <th>담당 팀</th>
                 <th>목표일</th>
                 <th>상태</th>
+                <th>바로가기</th>
               </tr>
             </thead>
             <tbody>
               ${filtered.map(t => {
                 const statusLabel = isCompleted(t.status) ? "과제완료" : t.status;
                 const statusClass = isCompleted(t.status) ? "과제완료" : t.status;
-                const jiraIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle;"><path d="M11.571 11.429 6 5.714 11.571 0l5.572 5.714-5.572 5.715Zm0 0L17.143 17 11.57 22.714 6 17l5.571-5.571Z" stroke="#0052CC" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
-                const wikiIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0065FF" stroke-width="2" style="display:inline;vertical-align:middle;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>`;
+                const jiraIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle;"><path d="M11.571 11.429 6 5.714 11.571 0l5.572 5.714-5.572 5.715Zm0 0L17.143 17 11.57 22.714 6 17l5.571-5.571Z" stroke="#0052CC" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+                const wikiIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0065FF" stroke-width="2" style="display:inline;vertical-align:middle;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>`;
                 return `
                 <tr>
-                  <td>
-                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                      <span style="font-weight:500;flex:1;min-width:0;">${t.name}</span>
-                      <div style="display:flex;gap:5px;flex-shrink:0;">
-                        ${t.jiraLink ? `<a href="${t.jiraLink}" target="_blank" rel="noopener" class="task-link-btn jira">${jiraIcon} Jira</a>` : ""}
-                        ${t.wikiLink ? `<a href="${t.wikiLink}" target="_blank" rel="noopener" class="task-link-btn wiki">${wikiIcon} Wiki</a>` : ""}
-                        ${t.link && !t.jiraLink && !t.wikiLink ? `<a href="${t.link}" target="_blank" rel="noopener" class="task-link-btn wiki">${wikiIcon} 링크</a>` : ""}
-                      </div>
-                    </div>
-                  </td>
+                  <td style="font-weight:500;">${t.name}</td>
                   <td>
                     <span style="color:var(--accent);font-weight:600;">${t.objId}</span>
                     <span style="font-size:12px;color:var(--text-muted);">${t.krId}</span>
@@ -505,6 +497,14 @@
                   <td>${t.team}</td>
                   <td><span style="font-size:13px;">${t.targetDate || "-"}</span></td>
                   <td><span class="status-badge ${statusClass}"><span class="task-status ${statusClass}"></span>${statusLabel}</span></td>
+                  <td>
+                    <div style="display:flex;gap:5px;">
+                      ${t.jiraLink ? `<a href="${t.jiraLink}" target="_blank" rel="noopener" class="task-link-btn jira">${jiraIcon} Jira</a>` : ""}
+                      ${t.wikiLink ? `<a href="${t.wikiLink}" target="_blank" rel="noopener" class="task-link-btn wiki">${wikiIcon} Wiki</a>` : ""}
+                      ${t.link && !t.jiraLink && !t.wikiLink ? `<a href="${t.link}" target="_blank" rel="noopener" class="task-link-btn wiki">${wikiIcon} 링크</a>` : ""}
+                      ${!t.jiraLink && !t.wikiLink && !t.link ? `<span style="color:var(--text-muted);font-size:12px;">-</span>` : ""}
+                    </div>
+                  </td>
                 </tr>`;
               }).join("")}
             </tbody>
