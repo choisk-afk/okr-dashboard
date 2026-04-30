@@ -363,7 +363,7 @@
                     <div class="kr-numbers">
                       <span class="kr-target">목표 ${d ? formatDisplay(kr, d.target) : "-"}</span>
                       <span class="kr-actual" style="color:${rateColor(rate)}">실적 ${d ? formatDisplay(kr, d.actual) : "-"}</span>
-                      <span style="font-weight:700;color:${rateColor(rate)}">${fmtRate(rate)}</span>
+                      <span style="font-weight:700;color:${rateColor(rate)}">달성률 ${fmtRate(rate)}</span>
                     </div>
                   </div>
                   <div class="kr-progress-bar">
