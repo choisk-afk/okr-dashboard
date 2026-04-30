@@ -304,12 +304,34 @@
   }
 
   // ─── OKR Detail ───
+  const STATUS_LEGEND = [
+    { cls: "완료",    label: "과제완료" },
+    { cls: "진행중",  label: "진행중" },
+    { cls: "계획중",  label: "계획중" },
+    { cls: "홀딩",    label: "홀딩" },
+    { cls: "드랍",    label: "드랍" },
+  ];
+
   function renderOKRDetail() {
     const month = getCurrentMonth();
     const el = document.getElementById("okr-detail");
 
-    el.innerHTML = OKR_DATA.objectives.map(obj => {
-      const objRate = calcObjectiveRate(obj, month);
+    const legend = `
+      <div class="kr-task-legend">
+        <span class="kr-task-legend-label">과제 상태</span>
+        ${STATUS_LEGEND.map(s => `
+          <span class="kr-task-legend-item">
+            <span class="task-status ${s.cls}"></span>${s.label}
+          </span>
+        `).join("")}
+        <span class="kr-task-legend-item" style="margin-left:4px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="opacity:.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          링크 있음 (클릭)
+        </span>
+      </div>
+    `;
+
+    el.innerHTML = legend + OKR_DATA.objectives.map(obj => {
       return `
         <div class="objective-block">
           <div class="objective-header" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.expand-icon').classList.toggle('open')">
@@ -329,6 +351,7 @@
               const d = kr.monthly[month];
               const rate = calcRate(kr, month);
               const rc = rateClass(rate);
+              const krUid = `tasks-${kr.id.replace(/[^a-z0-9]/gi, "-")}`;
               const cumNote = kr.isCumulative
                 ? `<span style="font-size:11px;color:var(--text-muted);margin-left:8px;">📈 누적</span>`
                 : "";
@@ -347,7 +370,7 @@
                     </div>
                   </div>
                   <div class="kr-progress-bar">
-                    <div class="kr-progress-fill ${rc}" style="width:${rate || 0}%"></div>
+                    <div class="kr-progress-fill ${rc}" style="width:${Math.min(rate||0,100)}%"></div>
                   </div>
                   ${kr.baselineLabel ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">기준: ${kr.baselineLabel}</div>` : ""}
                   ${kr.subKRs ? `
@@ -365,16 +388,32 @@
                       }).join("")}
                     </div>
                   ` : ""}
-                  <div class="kr-tasks">
-                    ${kr.tasks.map(t => `
-                      <span class="kr-task-tag">
-                        <span class="task-status ${isCompleted(t.status) ? '완료' : t.status}"></span>
-                        ${t.name}
-                        <span class="dept">${t.team}</span>
-                        ${t.targetDate ? `<span style="font-size:10px;color:var(--text-muted);">~${t.targetDate.slice(5)}</span>` : ""}
-                      </span>
-                    `).join("")}
-                  </div>
+                  ${kr.tasks.length > 0 ? `
+                    <button class="kr-tasks-toggle" onclick="(function(btn){
+                      const box = document.getElementById('${krUid}');
+                      const open = box.classList.toggle('open');
+                      btn.querySelector('.toggle-label').textContent = open ? '과제 접기' : '과제 ${kr.tasks.length}건 보기';
+                      btn.querySelector('.toggle-icon').style.transform = open ? 'rotate(180deg)' : '';
+                    })(this)">
+                      <svg class="toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+                      <span class="toggle-label">과제 ${kr.tasks.length}건 보기</span>
+                    </button>
+                    <div class="kr-tasks" id="${krUid}">
+                      ${kr.tasks.map(t => {
+                        const stCls = isCompleted(t.status) ? "완료" : t.status;
+                        const inner = `
+                          <span class="task-status ${stCls}"></span>
+                          <span class="kr-task-name">${t.name}</span>
+                          <span class="dept">${t.team}</span>
+                          ${t.targetDate ? `<span class="kr-task-date">~${t.targetDate.slice(5)}</span>` : ""}
+                          ${t.link ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;opacity:.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>` : ""}
+                        `;
+                        return t.link
+                          ? `<a class="kr-task-tag" href="${t.link}" target="_blank" rel="noopener">${inner}</a>`
+                          : `<div class="kr-task-tag">${inner}</div>`;
+                      }).join("")}
+                    </div>
+                  ` : ""}
                 </div>
               `;
             }).join("")}
