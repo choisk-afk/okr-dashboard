@@ -103,10 +103,24 @@
 </main>
 
 <script>
-var _t = Date.now();
-document.write('<scr'+'ipt src="data.js?t='+_t+'"></scr'+'ipt>');
-document.write('<scr'+'ipt src="auth.js?t='+_t+'"></scr'+'ipt>');
-document.write('<scr'+'ipt src="app.js?t='+_t+'"></scr'+'ipt>');
+(function() {
+  var files = ['data.js', 'auth.js', 'app.js'];
+  var idx = 0;
+  function next() {
+    if (idx >= files.length) return;
+    var url = files[idx++] + '?nocache=' + Date.now() + '&r=' + Math.random().toString(36).slice(2);
+    fetch(url, { cache: 'no-store' })
+      .then(function(r) { return r.text(); })
+      .then(function(code) {
+        var s = document.createElement('script');
+        s.text = code;
+        document.head.appendChild(s);
+        next();
+      })
+      .catch(function(e) { console.error('Load failed:', url, e); });
+  }
+  next();
+})();
 </script>
 </body>
 </html>
