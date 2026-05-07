@@ -659,6 +659,32 @@
 
         <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:12px;">월별 상세 추이</div>
         <div style="overflow-x:auto;">${trendTable}</div>
+
+        ${ps.analysis && ps.analysis[month] ? (() => {
+          const a = ps.analysis[month];
+          return `
+            <div style="margin-top:28px;padding-top:24px;border-top:1.5px solid var(--border);">
+              <div style="font-size:15px;font-weight:700;margin-bottom:6px;">점유율 변화 AI 분석</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">${getMonthDisplayLabel(month)} 전월 대비 변화 요인 분석 (내부 위키 기반)</div>
+              <div style="font-size:14px;line-height:1.7;color:var(--text-secondary);padding:16px 20px;background:#f8f9fb;border-radius:10px;border-left:4px solid var(--accent);margin-bottom:20px;">${a.summary}</div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                ${a.changes.map(c => `
+                  <div style="padding:16px 20px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                      <span style="font-size:14px;font-weight:700;color:var(--text-primary);">${c.method}</span>
+                      <span style="font-size:12px;font-weight:700;padding:2px 8px;border-radius:4px;background:${c.delta.startsWith('+') ? 'var(--success-light)' : c.delta.startsWith('-') ? 'var(--danger-light)' : '#f3f4f6'};color:${c.delta.startsWith('+') ? 'var(--success)' : c.delta.startsWith('-') ? 'var(--danger)' : 'var(--text-muted)'};">${c.delta}</span>
+                    </div>
+                    <div style="font-size:13px;line-height:1.65;color:var(--text-secondary);">${c.reason}</div>
+                    ${c.source ? `<a href="${c.source}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;color:var(--accent);text-decoration:none;">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+                      위키 출처 확인
+                    </a>` : ""}
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          `;
+        })() : ""}
       </div>
     `;
   }
