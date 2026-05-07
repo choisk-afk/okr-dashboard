@@ -431,8 +431,7 @@
                           : "";
                         const inner = `
                           <span class="task-label task-label-${status}">${status}</span>
-                          <span class="kr-task-name">${t.name}</span>
-                          ${isNewTask(t) ? newBadge() : ""}
+                          <span class="kr-task-name">${t.name}${isNewTask(t) ? " " + newBadge() : ""}</span>
                           ${linkBadge}
                           <span class="dept">${t.team}</span>
                           <span class="kr-task-date">${dateStr || "-"}</span>
