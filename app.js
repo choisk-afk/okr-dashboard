@@ -747,7 +747,7 @@
     }).join("");
 
     el.innerHTML = "<div class='card'>"
-      + "<div class='card-title'>결정실 완료보고</div>"
+      + "<div class='card-title'>결정실 완료보고 <span style='font-size:12px;font-weight:500;color:var(--text-muted);background:#f3f4f6;padding:2px 8px;border-radius:10px;vertical-align:middle;'>준비중</span></div>"
       + "<div style='font-size:12px;color:var(--text-muted);margin-bottom:20px;'>2026년 결제정산프로덕트실 팀별 완료 과제 성과 요약 · Confluence 기반</div>"
       + "<div style='display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;'>"
       + cards
