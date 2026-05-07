@@ -342,14 +342,78 @@ const OKR_DATA = {
     }
   ],
   arMetrics: {
-    description: "결제수단별 AR(Authorization Rate) — 결제 성공률",
-    source: "Zeppelin 06.Success Rate (raw_log.serverlog_billing_logging_dh_pay_dashboard)",
-    note: "데이터 기준: 주간 단위 집계 / 보조결제수단 제외 / B2B 제외",
+    description: "결제수단별 AR(Authorization Rate) — 결제 성공률 (AR = SR + RR)",
+    source: "Zeppelin SR/RR/FR 노트북 (raw_log.serverlog_billing_logging_dh_pay_dashboard)",
+    note: "데이터 기준: 월별 집계 / 보조결제수단 제외 / B2B 제외 / AR = SR + RR",
     months: ["2026-01", "2026-02", "2026-03", "2026-04"],
     overall: {
       "2026-01": 99.06, "2026-02": 99.06, "2026-03": 99.04, "2026-04": 99.06
     },
-    methods: []
+    methods: [
+      {
+        name: "전체",
+        sr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        rr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        fr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        ar: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null }
+      },
+      {
+        name: "배민페이카드",
+        sr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        rr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        fr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        ar: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null }
+      },
+      {
+        name: "배민페이계좌",
+        sr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        rr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        fr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        ar: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null }
+      },
+      {
+        name: "배민페이머니",
+        sr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        rr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        fr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        ar: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null }
+      },
+      {
+        name: "신용/체크카드",
+        sr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        rr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        fr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        ar: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null }
+      },
+      {
+        name: "카카오페이",
+        sr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        rr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        fr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        ar: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null }
+      },
+      {
+        name: "네이버페이",
+        sr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        rr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        fr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        ar: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null }
+      },
+      {
+        name: "토스페이",
+        sr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        rr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        fr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        ar: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null }
+      },
+      {
+        name: "휴대폰",
+        sr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        rr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        fr: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null },
+        ar: { "2026-01": null, "2026-02": null, "2026-03": null, "2026-04": null }
+      }
+    ]
   },
 
   completionReports: [
