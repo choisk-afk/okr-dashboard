@@ -654,6 +654,10 @@
       <div>
         <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">금액 기준 · 보조결제수단 포함 · ${getMonthDisplayLabel(month)} 기준</div>
 
+        ${renderGiftMetrics(month)}
+
+        <div style="margin-top:28px;padding-top:24px;border-top:2px solid var(--border);"></div>
+
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:14px;">이번 달 수단별 점유율</div>
@@ -670,8 +674,6 @@
 
         <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:12px;">월별 상세 추이</div>
         <div style="overflow-x:auto;">${trendTable}</div>
-
-        ${renderGiftMetrics(month)}
 
         ${ps.analysis && ps.analysis[month] ? (() => {
           const a = ps.analysis[month];
