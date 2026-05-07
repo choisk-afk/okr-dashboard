@@ -679,7 +679,14 @@
               <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px;">${getMonthDisplayLabel(month)} 전월 대비 변화 요인 분석 (내부 위키 기반)</div>
               <div style="font-size:14px;line-height:1.7;color:var(--text-secondary);padding:16px 20px;background:#f8f9fb;border-radius:10px;border-left:4px solid var(--accent);margin-bottom:20px;">${a.summary}</div>
               <div style="display:flex;flex-direction:column;gap:12px;">
-                ${a.changes.map(c => `
+                ${[...a.changes].sort((x,y) => {
+                  const bamin = ['배민페이(전체)', '└ 배민페이카드', '└ 배민페이머니', '└ 배민페이계좌'];
+                  const xi = bamin.indexOf(x.method), yi = bamin.indexOf(y.method);
+                  if (xi !== -1 && yi !== -1) return xi - yi;
+                  if (xi !== -1) return -1;
+                  if (yi !== -1) return 1;
+                  return 0;
+                }).map(c => `
                   <div style="padding:16px 20px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;">
                     <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
                       <span style="font-size:14px;font-weight:700;color:var(--text-primary);">${c.method}</span>
