@@ -154,6 +154,7 @@
     renderOrgView();
     renderAIReport();
     renderPayShareSection();
+    renderGiftSection();
   }
 
   // ─── Overview ───
@@ -654,10 +655,6 @@
       <div>
         <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">금액 기준 · 보조결제수단 포함 · ${getMonthDisplayLabel(month)} 기준</div>
 
-        ${renderGiftMetrics(month)}
-
-        <div style="margin-top:28px;padding-top:24px;border-top:2px solid var(--border);"></div>
-
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:14px;">이번 달 수단별 점유율</div>
@@ -711,7 +708,20 @@
     `;
   }
 
-  // --- 선물하기 지표 ---
+  // --- 선물하기 지표 섹션 ---
+  function renderGiftSection() {
+    const el = document.getElementById("gift-metrics");
+    if (!el) return;
+    const month = getCurrentMonth();
+    try {
+      const content = renderGiftMetrics(month);
+      el.innerHTML = '<div class="card"><div class="card-title">선물하기 지표</div>' + content + '</div>';
+    } catch(e) {
+      el.innerHTML = '<div class="card" style="color:red;">오류: ' + e.message + '</div>';
+      console.error(e);
+    }
+  }
+
   function renderGiftMetrics(month) {
     const gm = OKR_DATA.giftMetrics;
     if (!gm) return "";
