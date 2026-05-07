@@ -153,6 +153,7 @@
     renderTasks();
     renderOrgView();
     renderAIReport();
+    renderARMetrics();
     renderPayShareSection();
     renderGiftSection();
     renderCompletionReports();
@@ -707,6 +708,23 @@
         })() : ""}
       </div>
     `;
+  }
+
+  // --- AR 지표 ---
+  function renderARMetrics() {
+    var el = document.getElementById("ar-metrics");
+    if (!el) return;
+    var ar = OKR_DATA.arMetrics;
+    if (!ar || !ar.length) {
+      el.innerHTML = "<div class='card' style='text-align:center;padding:60px 20px;'>"
+        + "<div style='font-size:40px;margin-bottom:16px;'>📡</div>"
+        + "<div style='font-size:16px;font-weight:600;margin-bottom:8px;'>AR 지표 데이터 준비중</div>"
+        + "<div style='color:var(--text-muted);font-size:14px;'>데이터 입력 후 바로 표시됩니다.</div>"
+        + "</div>";
+      return;
+    }
+    // 데이터 입력 후 렌더링 로직 추가 예정
+    el.innerHTML = "<div class='card'><div class='card-title'>AR 지표</div><pre>" + JSON.stringify(ar, null, 2) + "</pre></div>";
   }
 
   // --- 결정실 완료보고 ---
