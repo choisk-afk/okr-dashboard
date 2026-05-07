@@ -666,13 +666,24 @@
     const month = getCurrentMonth();
     const el = document.getElementById("pay-share");
     if (!el) return;
-    el.innerHTML = `
-      <div class="card">
-        <div class="card-title">결제수단별 점유율</div>
-        ${renderPaymentShare(month)}
-      </div>
-    `;
-    setTimeout(() => renderPayShareChart(getCurrentMonth()), 50);
+    try {
+      const inner = renderPaymentShare(month);
+      const wrapper = document.createElement("div");
+      wrapper.className = "card";
+      const title = document.createElement("div");
+      title.className = "card-title";
+      title.textContent = "결제수단별 점유율";
+      wrapper.appendChild(title);
+      const content = document.createElement("div");
+      content.innerHTML = inner;
+      wrapper.appendChild(content);
+      el.innerHTML = "";
+      el.appendChild(wrapper);
+    } catch(e) {
+      el.innerHTML = '<div class="card" style="color:red;">렌더 오류: ' + e.message + '</div>';
+      console.error("renderPayShareSection error:", e);
+    }
+    setTimeout(() => renderPayShareChart(getCurrentMonth()), 100);
   }
 
   // ─── AI Report ───
