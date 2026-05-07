@@ -127,8 +127,7 @@
       document.getElementById(section).classList.add("active");
       document.getElementById("pageTitle").textContent = item.textContent.trim();
       render();
-      // AI 리포트 탭 전환 시 차트 재렌더 (canvas 크기 확보 후)
-      if (section === "ai-report") {
+      if (section === "pay-share") {
         setTimeout(() => renderPayShareChart(getCurrentMonth()), 50);
       }
     });
@@ -154,6 +153,7 @@
     renderTasks();
     renderOrgView();
     renderAIReport();
+    renderPayShareSection();
   }
 
   // ─── Overview ───
@@ -638,9 +638,8 @@
       </table>`;
 
     return `
-      <div style="margin-top:32px;padding-top:28px;border-top:2px solid var(--border);">
-        <div style="font-size:16px;font-weight:700;margin-bottom:4px;">결제수단별 점유율</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-bottom:24px;">금액 기준 · 보조결제수단 포함 · ${getMonthDisplayLabel(month)} 기준</div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">금액 기준 · 보조결제수단 포함 · ${getMonthDisplayLabel(month)} 기준</div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;">
           <div>
@@ -660,6 +659,20 @@
         <div style="overflow-x:auto;">${trendTable}</div>
       </div>
     `;
+  }
+
+  // ─── 결제수단 점유율 섹션 ───
+  function renderPayShareSection() {
+    const month = getCurrentMonth();
+    const el = document.getElementById("pay-share");
+    if (!el) return;
+    el.innerHTML = `
+      <div class="card">
+        <div class="card-title">결제수단별 점유율</div>
+        ${renderPaymentShare(month)}
+      </div>
+    `;
+    setTimeout(() => renderPayShareChart(getCurrentMonth()), 50);
   }
 
   // ─── AI Report ───
@@ -706,11 +719,9 @@
             <ul class="ai-list recommendations">${report.recommendations.map(r => `<li>${r}</li>`).join("")}</ul>
           </div>
 
-          ${renderPaymentShare(month)}
         </div>
       </div>
     `;
-    renderPayShareChart(month);
   }
 
   function renderPayShareChart(month) {
@@ -750,9 +761,8 @@
   }
 
   render();
-  // 초기 로드 시 AI 리포트가 active면 차트 재시도
   setTimeout(() => {
-    if (state.currentSection === "ai-report") renderPayShareChart(getCurrentMonth());
+    if (state.currentSection === "pay-share") renderPayShareChart(getCurrentMonth());
   }, 100);
 
   // ─── 구글시트 업데이트 ───
