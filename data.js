@@ -341,6 +341,79 @@ const OKR_DATA = {
       ]
     }
   ],
+  giftMetrics: {
+    annualTarget: 869380000000,
+    months: ["2026-01", "2026-02", "2026-03", "2026-04"],
+    metrics: [
+      {
+        name: "발행금액 전체",
+        unit: "억원",
+        annualTarget: 8694,
+        monthly: {
+          "2026-01": { actual: 697.1 },
+          "2026-02": { actual: 661.5 },
+          "2026-03": { actual: 661.5 },
+          "2026-04": { actual: 650.4 }
+        }
+      },
+      {
+        name: "B2C (배민앱&PC)",
+        unit: "억원",
+        annualTarget: 615,
+        monthly: {
+          "2026-01": { actual: 47.7 },
+          "2026-02": { actual: 47.5 },
+          "2026-03": { actual: 43.7 },
+          "2026-04": { actual: 53.0 }
+        }
+      },
+      {
+        name: "B2B2C (카카오)",
+        unit: "억원",
+        annualTarget: 6583,
+        monthly: {
+          "2026-01": { actual: 517.8 },
+          "2026-02": { actual: 501.9 },
+          "2026-03": { actual: 504.3 },
+          "2026-04": { actual: 485.3 }
+        }
+      },
+      {
+        name: "B2B (직접&대행)",
+        unit: "억원",
+        annualTarget: 766,
+        monthly: {
+          "2026-01": { actual: 59.7 },
+          "2026-02": { actual: 47.7 },
+          "2026-03": { actual: 48.8 },
+          "2026-04": { actual: 49.0 }
+        }
+      },
+      {
+        name: "B2B2C (그외채널)",
+        unit: "억원",
+        annualTarget: 633,
+        monthly: {
+          "2026-01": { actual: 62.7 },
+          "2026-02": { actual: 56.3 },
+          "2026-03": { actual: 55.7 },
+          "2026-04": { actual: 54.7 }
+        }
+      }
+    ],
+    orderCount: {
+      name: "선물하기 주문수 (누적)",
+      unit: "만건",
+      annualTarget: 5680,
+      monthly: {
+        "2026-01": { target: 390,   actual: 390.1 },
+        "2026-02": { target: 787.4, actual: 732.5 },
+        "2026-03": { target: 1225.9,actual: 1103.2 },
+        "2026-04": { target: 1626.4,actual: 1459.4 }
+      }
+    }
+  },
+
   paymentShare: {
     label: "점유율(금액 기준, 보조결제수단 포함)",
     months: ["2026-01", "2026-02", "2026-03", "2026-04"],

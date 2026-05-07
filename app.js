@@ -671,6 +671,8 @@
         <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:12px;">월별 상세 추이</div>
         <div style="overflow-x:auto;">${trendTable}</div>
 
+        ${renderGiftMetrics(month)}
+
         ${ps.analysis && ps.analysis[month] ? (() => {
           const a = ps.analysis[month];
           return `
@@ -705,6 +707,61 @@
         })() : ""}
       </div>
     `;
+  }
+
+  // --- 선물하기 지표 ---
+  function renderGiftMetrics(month) {
+    const gm = OKR_DATA.giftMetrics;
+    if (!gm) return "";
+    const availMonths = gm.months.filter(m => OKR_DATA.months.includes(m));
+    const thS = 'style="font-size:11px;font-weight:600;color:var(--text-muted);padding:8px 12px;border-bottom:2px solid var(--border);text-align:right;"';
+    const thLS = 'style="font-size:11px;font-weight:600;color:var(--text-muted);padding:8px 12px;border-bottom:2px solid var(--border);text-align:left;"';
+    const tdS = 'style="font-size:13px;padding:9px 12px;border-bottom:1px solid #f3f4f6;text-align:right;"';
+
+    const issueRows = gm.metrics.map(function(met) {
+      const vals = availMonths.map(function(mo) {
+        var v = met.monthly[mo];
+        return v ? v.actual : null;
+      });
+      var latest = null;
+      vals.forEach(function(v) { if (v !== null) latest = v; });
+      var pct = latest !== null && met.annualTarget ? Math.round(latest / met.annualTarget * 1000) / 10 : null;
+      var pctColor = pct === null ? "" : pct >= 80 ? "var(--success)" : pct >= 60 ? "var(--warning)" : "var(--danger)";
+      return "<tr><td style='font-size:13px;font-weight:500;padding:9px 12px;border-bottom:1px solid #f3f4f6;'>" + met.name + "</td>"
+        + "<td " + tdS + ">" + met.annualTarget.toLocaleString() + "억</td>"
+        + vals.map(function(v) { return "<td " + tdS + ">" + (v !== null ? v.toFixed(1) + "억" : "-") + "</td>"; }).join("")
+        + "<td " + tdS + "><span style='font-weight:700;color:" + pctColor + ";'>" + (pct !== null ? pct + "%" : "-") + "</span></td></tr>";
+    }).join("");
+
+    var oc = gm.orderCount;
+    var ocRow = "<tr><td style='font-size:13px;font-weight:500;padding:9px 12px;border-bottom:1px solid #f3f4f6;'>" + oc.name + "</td>"
+      + "<td " + tdS + ">" + oc.annualTarget.toLocaleString() + "만건</td>"
+      + availMonths.map(function(mo) {
+          var v = oc.monthly[mo];
+          if (!v) return "<td " + tdS + ">-</td>";
+          var pct = v.target > 0 ? Math.round(v.actual / v.target * 100) : null;
+          var col = pct === null ? "" : pct >= 90 ? "var(--success)" : pct >= 70 ? "var(--warning)" : "var(--danger)";
+          return "<td " + tdS + "><div style='font-weight:600;'>" + v.actual.toLocaleString() + "만</div>"
+            + "<div style='font-size:11px;color:var(--text-muted);'>목표 " + v.target.toLocaleString() + "만</div>"
+            + (pct !== null ? "<div style='font-size:11px;font-weight:700;color:" + col + ";'>" + pct + "%</div>" : "")
+            + "</td>";
+        }).join("")
+      + "</tr>";
+
+    var monthHdrs = availMonths.map(function(m) { return "<th " + thS + ">" + OKR_DATA.monthLabels[m] + "</th>"; }).join("");
+
+    return "<div style='margin-top:32px;padding-top:28px;border-top:2px solid var(--border);'>"
+      + "<div style='font-size:16px;font-weight:700;margin-bottom:4px;'>선물하기 지표</div>"
+      + "<div style='font-size:12px;color:var(--text-muted);margin-bottom:20px;'>2026 발행금액 목표(2604ver.) · 주문수 누적 기준</div>"
+      + "<div style='font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;'>발행금액 (단위: 억원)</div>"
+      + "<div style='overflow-x:auto;margin-bottom:24px;'><table style='width:100%;border-collapse:collapse;'>"
+      + "<thead><tr style='background:#f8f9fb;'><th " + thLS + ">채널</th><th " + thS + ">연간목표</th>" + monthHdrs + "<th " + thS + ">최신월/목표비</th></tr></thead>"
+      + "<tbody>" + issueRows + "</tbody></table></div>"
+      + "<div style='font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;'>주문수 누적 (단위: 만건)</div>"
+      + "<div style='overflow-x:auto;'><table style='width:100%;border-collapse:collapse;'>"
+      + "<thead><tr style='background:#f8f9fb;'><th " + thLS + ">항목</th><th " + thS + ">연간목표</th>" + monthHdrs + "</tr></thead>"
+      + "<tbody>" + ocRow + "</tbody></table></div>"
+      + "</div>";
   }
 
   // ─── 결제수단 점유율 섹션 ───
