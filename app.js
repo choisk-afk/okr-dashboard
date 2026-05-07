@@ -759,8 +759,10 @@
       }, 2500);
 
     } catch (e) {
-      btn.innerHTML = "⚠ 실패: " + e.message;
+      const isAccess = e.message.includes("Failed to fetch") || e.message.includes("접근 실패");
+      btn.innerHTML = isAccess ? "⚠ 시트 공개 설정 필요" : "⚠ " + e.message;
       btn.style.background = "#ef4444";
+      if (isAccess) alert("구글 시트가 비공개 상태입니다.\n시트 → 공유 → '링크가 있는 모든 사용자' → 뷰어 로 설정해주세요.");
       setTimeout(() => {
         btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg> 업데이트';
         btn.style.background = "#4f6ef7";
