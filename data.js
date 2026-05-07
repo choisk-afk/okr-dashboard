@@ -387,24 +387,6 @@ const OKR_DATA = {
       highlights: ["AI 장애 분석 봇 PoC 완료", "AWS Bedrock KB 기술 검증", "장애대응 자동화 과제 기술 기반 확보"],
       url: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/984139043/AWS+Bedrock+KB+AI+PoC"
     },
-    {
-      id: "CR6",
-      team: "결제플랫폼팀",
-      title: "[2026] 결제플랫폼팀 DevX 결과 분석",
-      date: "2026-04-14",
-      summary: "2026 Q1 DevX Survey 결과 분석. 팀의 소프트웨어 제공 방식, 집중시간, 배포 용이성 등 8개 항목 NPS 측정. 결제플랫폼팀 강점 및 개선 포인트 도출.",
-      highlights: ["Q1 DevX Survey 전팀 분석 완료", "배포/출시 용이성 항목 개선 필요 식별", "개발 생산성 향상 과제 우선순위 도출"],
-      url: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/1085378692/2026+DevX"
-    },
-    {
-      id: "CR7",
-      team: "결제허브팀",
-      title: "2026 Q1 DevX Survey 결과 분석 (결제정산프로덕트실)",
-      date: "2026-04-08",
-      summary: "결제정산프로덕트실 전체 DevX Survey 분석(응답률 85.7%, 30명/35명). 집중시간·자동화 비중 높은 결제허브팀 강점 확인, 코드 품질 및 정보탐색 영역 개선 과제 도출.",
-      highlights: ["응답률 85.7% (30/35명)", "자동화 비중 높아 집중시간 지표 양호", "2025→2026 NPS 변화 추이 분석"],
-      url: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/1074738356/2026+Q1+DevX+Survey"
-    }
   ],
 
   giftMetrics: {
