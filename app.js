@@ -429,9 +429,10 @@
                           : t.jiraLink
                           ? `<span class="task-link-badge jira">Jira</span>`
                           : "";
+                        const nameWithBadge = `<span class="kr-task-name-wrap"><span class="kr-task-name-text">${t.name}</span>${isNewTask(t) ? newBadge() : ""}</span>`;
                         const inner = `
                           <span class="task-label task-label-${status}">${status}</span>
-                          <span class="kr-task-name">${t.name}${isNewTask(t) ? " " + newBadge() : ""}</span>
+                          ${nameWithBadge}
                           ${linkBadge}
                           <span class="dept">${t.team}</span>
                           <span class="kr-task-date">${dateStr || "-"}</span>

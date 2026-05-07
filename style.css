@@ -603,6 +603,20 @@ a.kr-task-tag:hover {
   cursor: pointer;
 }
 
+.kr-task-name-wrap {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.kr-task-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .kr-task-name {
   flex: 1;
 }
