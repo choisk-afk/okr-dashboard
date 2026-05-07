@@ -603,14 +603,16 @@
       "기타":    "#a78bfa"
     };
 
+    const maxVal = Math.max(...curData.map(d => d.val), 1);
     const barRows = curData.map(d => {
       const color = groupColors[d.group] || "#9ca3af";
-      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px;">
+      const barWidth = Math.max((d.val / maxVal) * 95, d.val > 0 ? 1.5 : 0);
+      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
         <div style="width:110px;font-size:12px;font-weight:500;color:var(--text-secondary);text-align:right;flex-shrink:0;">${d.name}</div>
-        <div style="flex:1;background:#f3f4f6;border-radius:4px;height:20px;overflow:hidden;">
-          <div style="height:100%;width:${Math.min(d.val * 2.5, 100)}%;background:${color};border-radius:4px;transition:width .4s ease;"></div>
+        <div style="flex:1;background:#f3f4f6;border-radius:4px;height:18px;overflow:visible;position:relative;">
+          <div style="height:100%;width:${barWidth}%;min-width:${d.val > 0 ? 3 : 0}px;background:${color};border-radius:4px;transition:width .4s ease;"></div>
         </div>
-        <div style="width:44px;font-size:12px;font-weight:700;color:${color};flex-shrink:0;">${d.val.toFixed(2)}%</div>
+        <div style="width:48px;font-size:12px;font-weight:700;color:${color};flex-shrink:0;text-align:right;">${d.val.toFixed(2)}%</div>
       </div>`;
     }).join("");
 
