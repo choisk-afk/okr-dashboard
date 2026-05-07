@@ -730,19 +730,32 @@
     const thLS = 'style="font-size:11px;font-weight:600;color:var(--text-muted);padding:8px 12px;border-bottom:2px solid var(--border);text-align:left;"';
     const tdS = 'style="font-size:13px;padding:9px 12px;border-bottom:1px solid #f3f4f6;text-align:right;"';
 
+    var monthsPassed = availMonths.length;
+    var proRatePct = Math.round(monthsPassed / 12 * 100);
+
     const issueRows = gm.metrics.map(function(met) {
-      const vals = availMonths.map(function(mo) {
+      var vals = availMonths.map(function(mo) {
         var v = met.monthly[mo];
         return v ? v.actual : null;
       });
-      var latest = null;
-      vals.forEach(function(v) { if (v !== null) latest = v; });
-      var pct = latest !== null && met.annualTarget ? Math.round(latest / met.annualTarget * 1000) / 10 : null;
-      var pctColor = pct === null ? "" : pct >= 80 ? "var(--success)" : pct >= 60 ? "var(--warning)" : "var(--danger)";
-      return "<tr><td style='font-size:13px;font-weight:500;padding:9px 12px;border-bottom:1px solid #f3f4f6;'>" + met.name + "</td>"
-        + "<td " + tdS + ">" + met.annualTarget.toLocaleString() + "억</td>"
-        + vals.map(function(v) { return "<td " + tdS + ">" + (v !== null ? v.toFixed(1) + "억" : "-") + "</td>"; }).join("")
-        + "<td " + tdS + "><span style='font-weight:700;color:" + pctColor + ";'>" + (pct !== null ? pct + "%" : "-") + "</span></td></tr>";
+      var ytd = 0;
+      vals.forEach(function(v) { if (v !== null) ytd += v; });
+      var ytdPct = met.annualTarget ? Math.round(ytd / met.annualTarget * 1000) / 10 : null;
+      var pctColor = ytdPct === null ? "" : ytdPct >= proRatePct ? "var(--success)" : ytdPct >= proRatePct * 0.85 ? "var(--warning)" : "var(--danger)";
+      var barW = ytdPct !== null ? Math.min(ytdPct * 2.5, 100) : 0;
+      var proBar = "<div style='position:relative;background:#f3f4f6;border-radius:4px;height:8px;margin-top:4px;'>"
+        + "<div style='position:absolute;left:0;top:0;height:100%;width:" + barW + "%;background:" + pctColor + ";border-radius:4px;'></div>"
+        + "<div style='position:absolute;left:" + Math.min(proRatePct * 2.5, 100) + "%;top:-3px;height:14px;width:2px;background:#6b7280;'></div>"
+        + "</div>";
+      return "<tr>"
+        + "<td style='font-size:13px;font-weight:500;padding:9px 12px;border-bottom:1px solid #f3f4f6;'>" + met.name + "</td>"
+        + "<td " + tdS + " style='font-size:13px;padding:9px 12px;border-bottom:1px solid #f3f4f6;text-align:right;'>" + met.annualTarget.toLocaleString() + "억</td>"
+        + vals.map(function(v) { return "<td style='font-size:13px;padding:9px 12px;border-bottom:1px solid #f3f4f6;text-align:right;'>" + (v !== null ? v.toFixed(1) : "-") + "</td>"; }).join("")
+        + "<td style='font-size:13px;padding:9px 12px;border-bottom:1px solid #f3f4f6;text-align:right;font-weight:600;'>" + ytd.toFixed(1) + "억</td>"
+        + "<td style='font-size:13px;padding:9px 12px;border-bottom:1px solid #f3f4f6;min-width:120px;'>"
+        + "<div style='display:flex;align-items:center;justify-content:flex-end;gap:6px;'><span style='font-weight:700;color:" + pctColor + ";'>" + (ytdPct !== null ? ytdPct + "%" : "-") + "</span></div>"
+        + proBar + "</td>"
+        + "</tr>";
     }).join("");
 
     var oc = gm.orderCount;
@@ -760,18 +773,21 @@
         }).join("")
       + "</tr>";
 
-    var monthHdrs = availMonths.map(function(m) { return "<th " + thS + ">" + OKR_DATA.monthLabels[m] + "</th>"; }).join("");
+    var mHdr = function(t) { return "<th style='font-size:11px;font-weight:600;color:var(--text-muted);padding:8px 12px;border-bottom:2px solid var(--border);text-align:right;'>" + t + "</th>"; };
+    var monthHdrs = availMonths.map(function(m) { return mHdr(OKR_DATA.monthLabels[m]); }).join("");
 
     return "<div style='margin-top:32px;padding-top:28px;border-top:2px solid var(--border);'>"
       + "<div style='font-size:16px;font-weight:700;margin-bottom:4px;'>선물하기 지표</div>"
-      + "<div style='font-size:12px;color:var(--text-muted);margin-bottom:20px;'>2026 발행금액 목표(2604ver.) · 주문수 누적 기준</div>"
+      + "<div style='font-size:12px;color:var(--text-muted);margin-bottom:4px;'>2026 발행금액 목표 (2604ver.) · 주문수 누적 기준</div>"
+      + "<div style='font-size:11px;color:var(--text-muted);margin-bottom:20px;padding:6px 10px;background:#f8f9fb;border-radius:6px;display:inline-block;'>"
+      + "연간 진도율 기준선: " + monthsPassed + "/12개월 = <strong>" + proRatePct + "%</strong> · 막대 안 회색선이 기준선</div>"
       + "<div style='font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;'>발행금액 (단위: 억원)</div>"
       + "<div style='overflow-x:auto;margin-bottom:24px;'><table style='width:100%;border-collapse:collapse;'>"
-      + "<thead><tr style='background:#f8f9fb;'><th " + thLS + ">채널</th><th " + thS + ">연간목표</th>" + monthHdrs + "<th " + thS + ">최신월/목표비</th></tr></thead>"
+      + "<thead><tr style='background:#f8f9fb;'><th " + thLS + ">채널</th>" + mHdr("연간목표") + monthHdrs + mHdr("YTD 누적") + mHdr("연간 진도율") + "</tr></thead>"
       + "<tbody>" + issueRows + "</tbody></table></div>"
       + "<div style='font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;'>주문수 누적 (단위: 만건)</div>"
       + "<div style='overflow-x:auto;'><table style='width:100%;border-collapse:collapse;'>"
-      + "<thead><tr style='background:#f8f9fb;'><th " + thLS + ">항목</th><th " + thS + ">연간목표</th>" + monthHdrs + "</tr></thead>"
+      + "<thead><tr style='background:#f8f9fb;'><th " + thLS + ">항목</th>" + mHdr("연간목표") + monthHdrs + "</tr></thead>"
       + "<tbody>" + ocRow + "</tbody></table></div>"
       + "</div>";
   }
