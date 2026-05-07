@@ -127,6 +127,10 @@
       document.getElementById(section).classList.add("active");
       document.getElementById("pageTitle").textContent = item.textContent.trim();
       render();
+      // AI 리포트 탭 전환 시 차트 재렌더 (canvas 크기 확보 후)
+      if (section === "ai-report") {
+        setTimeout(() => renderPayShareChart(getCurrentMonth()), 50);
+      }
     });
   });
 
@@ -746,6 +750,10 @@
   }
 
   render();
+  // 초기 로드 시 AI 리포트가 active면 차트 재시도
+  setTimeout(() => {
+    if (state.currentSection === "ai-report") renderPayShareChart(getCurrentMonth());
+  }, 100);
 
   // ─── 구글시트 업데이트 ───
   const METRICS_CSV_URL = "https://docs.google.com/spreadsheets/d/1ZfCB3XwmRPFRT446uGYrVVT29LdgJ71KlyyPBI4_KpE/export?format=csv&gid=1098880899";
