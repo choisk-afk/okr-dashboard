@@ -105,12 +105,14 @@ const OKR_DATA = {
             "2026-04": { target: 0, actual: 0 }
           },
           tasks: [
+            { id: "T14n", name: "메뉴할인 즉시할인 시스템 이관", team: "결제허브팀", status: "진행중", addedMonth: "2026-04" },
             { id: "T14", name: "즉시할인 타임세일 API 정책 변경 대응", team: "결제허브팀", status: "과제완료", targetDate: "2026-04-01", completedDate: "2026-04-01", owner: "설소영, 김윤정", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/925664219/PJ+202601+-" },
             { id: "T15", name: "기준수수료, 과제코드 연동을 통한 비용집계 자동화 대응", team: "결제허브팀", status: "과제완료", targetDate: "2026-04-09", completedDate: "2026-04-09", owner: "임상혁, 신영민", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/1005437529/260226" },
             { id: "T16", name: "메뉴할인분담금, 메뉴쿠폰 안분계산기 연동 효율화", team: "결제허브팀", status: "과제완료", targetDate: "2026-01-27", completedDate: "2026-01-27", owner: "설소영, 김윤정", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/936379778/PJ+202512+-" },
             { id: "T17", name: "DSM 신규요금 체계 V3 정산 자동화", team: "정산플랫폼팀", status: "과제완료", targetDate: "2026-03-31", completedDate: "2026-03-31", owner: "황혜진", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/978661942/260204+DSM+V3" },
             { id: "T18", name: "수수료 비용 집계 자동화", team: "정산플랫폼팀", status: "과제완료", targetDate: "2026-03-31", completedDate: "2026-04-01", owner: "박연화", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/800556575/250812" },
             { id: "T19", name: "라이더 - 로드러너 전환 - 정산 서비스 이관", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-03-31", owner: "김초롱", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/762417108/20250708+-" },
+            { id: "T19n", name: "푸드 - 메뉴할인 시스템 이관 대응", team: "정산플랫폼팀", status: "진행중", addedMonth: "2026-04" },
             { id: "T20", name: "배민클럽 장기 상품 - 정기결제 시스템 대응", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-02-24", completedDate: "2026-02-24", owner: "장우진", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/943391450/260108" },
             { id: "T21", name: "결제 관련 지면 다국어 대응", team: "결제플랫폼팀", status: "과제완료", targetDate: "2026-03-12", completedDate: "2026-03-12", owner: "장우진", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/965138791/260126" },
             { id: "T22", name: "배민클럽 배민페이머니 프로모션 - 결제 대응", team: "결제플랫폼팀", status: "진행중", targetDate: "2026-04-28", owner: "장우진", jiraLink: "https://cloud.jira.woowa.in/browse/COREPAY-9421" },
@@ -245,11 +247,14 @@ const OKR_DATA = {
             { label: "결제웹프론트 선물하기/정산 (2,178→845h)", monthly: { "2026-01": { t: 2178, a: 2178 }, "2026-02": { t: 2178, a: 2178 }, "2026-03": { t: 1465, a: 2178 }, "2026-04": { t: 1317, a: 0 } } }
           ],
           tasks: [
+            { id: "T44n", name: "서비스대사 처리 자동화(자동취소, 자동일치 등)", team: "결제허브팀", status: "진행중", addedMonth: "2026-04" },
             { id: "T44", name: "PG 부분취소 대사 처리 자동화", team: "결제허브팀", status: "과제완료", targetDate: "2026-03-20", completedDate: "2026-03-20", owner: "김재준", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/1015284361" },
             { id: "T45", name: "주문-결제 정합성 확인 어드민 구축", team: "결제허브팀", status: "진행중", targetDate: "2026-05-22", owner: "정신호, 신영민", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/886912020/-" },
             { id: "T46", name: "결제 작업공지 전파 자동화 (n8n)", team: "결제허브팀", status: "진행중", targetDate: "2026-04-30", owner: "정신호, 배지영" },
             { id: "T47", name: "상품권 예외 환불/연장 기능 추가", team: "배민선물하기팀", status: "과제완료", targetDate: "2026-02-12", completedDate: "2026-02-12", owner: "김희선", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/GIFT/pages/939655767/2026-02" },
             { id: "T48", name: "오픈뱅킹 결제대사 개선", team: "결제플랫폼팀", status: "진행중", targetDate: "2026-05-15", owner: "최유성", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/1004885549" },
+            { id: "T48n1", name: "오픈뱅킹 결산 데이터 검증 자동화", team: "결제플랫폼팀", status: "계획중", addedMonth: "2026-04" },
+            { id: "T48n2", name: "월마감 회계 처리 자동화", team: "결제플랫폼팀", status: "계획중", addedMonth: "2026-04" },
             { id: "T49", name: "채권압류서류 분류 자동화", team: "결제웹프론트개발팀", status: "진행중", targetDate: "2026-06-30", owner: "안현철" },
             { id: "T50", name: "선물하기 VoC 자동화", team: "결제웹프론트개발팀", status: "진행중", targetDate: "2026-06-30", owner: "박지은" }
           ]
@@ -270,7 +275,15 @@ const OKR_DATA = {
           tasks: [
             { id: "T51", name: "배치재수행 개선 - P1. 운영자 수행 기능 구현", team: "정산플랫폼팀", status: "계획중", targetDate: "2026-06-30" },
             { id: "T52", name: "배치재수행 개선 - P2. 자동 재시도 기능 구현", team: "정산플랫폼팀", status: "계획중", targetDate: "2026-07-31" },
-            { id: "T53", name: "보정 승인 프로세스 도입", team: "정산플랫폼팀", status: "계획중", targetDate: "2026-06-30" }
+            { id: "T52n", name: "배치재수행 개선 - P3. 배치 파이프라인 개선", team: "정산플랫폼팀", status: "계획중", addedMonth: "2026-04" },
+            { id: "T53", name: "보정 승인 프로세스 도입", team: "정산플랫폼팀", status: "계획중", targetDate: "2026-06-30" },
+            { id: "T53n1", name: "채권압류 누적잔액 조정 자동화", team: "정산플랫폼팀", status: "과제완료", addedMonth: "2026-04" },
+            { id: "T53n2", name: "월결산 개선 - 계정과목 대사 구현", team: "정산플랫폼팀", status: "진행중", addedMonth: "2026-04" },
+            { id: "T53n3", name: "AI 활용 - 운영업무 자동화", team: "정산플랫폼팀", status: "계획중", addedMonth: "2026-04" },
+            { id: "T53n4", name: "부가세 매출할인 로직 개선", team: "정산플랫폼팀", status: "과제완료", addedMonth: "2026-04" },
+            { id: "T53n5", name: "배민정산 할인금액 N자 분담 구조 마련", team: "정산플랫폼팀", status: "진행중", addedMonth: "2026-04" },
+            { id: "T53n6", name: "DSM V1 수수료 한도캡 개선", team: "정산플랫폼팀", status: "과제완료", addedMonth: "2026-04" },
+            { id: "T53n7", name: "신규 결제 수단 추가 - 애플페이 대응", team: "정산플랫폼팀", status: "진행중", addedMonth: "2026-04" }
           ]
         },
         {
@@ -314,7 +327,15 @@ const OKR_DATA = {
             { id: "T60", name: "정산시스템 배치플랫폼 전환", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-09-30", owner: "권세희", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/860214265/251001" },
             { id: "T61", name: "비용절감 - 배치 개선 (베타 서버)", team: "정산플랫폼팀", status: "과제완료", targetDate: "2026-04-30", completedDate: "2026-04-06", owner: "정용준", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/973648191/260121" },
             { id: "T62", name: "비용절감 - 배치 개선 (운영 서버)", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-06-30", owner: "정용준", wikiLink: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/973648191/260121" },
-            { id: "T63", name: "정산시스템 k8s 전환", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-06-30", owner: "이소진" }
+            { id: "T63", name: "정산시스템 k8s 전환", team: "정산플랫폼팀", status: "진행중", targetDate: "2026-06-30", owner: "이소진" },
+            { id: "T63n1", name: "배포/서버 K8s 기반으로 변경", team: "정산플랫폼팀", status: "진행중", addedMonth: "2026-04" },
+            { id: "T63n2", name: "장기 미해소 기술 부채 개선", team: "정산플랫폼팀", status: "진행중", addedMonth: "2026-04" },
+            { id: "T63n3", name: "재배달비 세금계산서 발행 대응", team: "정산플랫폼팀", status: "진행중", addedMonth: "2026-04" },
+            { id: "T63n4", name: "부분환불 기능 확대", team: "정산플랫폼팀", status: "과제완료", addedMonth: "2026-04" },
+            { id: "T63n5", name: "비즈머니 가상계좌 API 연동 개선", team: "결제플랫폼팀", status: "계획중", addedMonth: "2026-04" },
+            { id: "T63n6", name: "KB, NH 직승인 거래 대상 확대", team: "결제플랫폼팀", status: "계획중", addedMonth: "2026-04" },
+            { id: "T63n7", name: "현금영수증 api 신규 전환", team: "결제허브팀", status: "진행중", addedMonth: "2026-04" },
+            { id: "T63n8", name: "결제수수료 공시 집계 자동화", team: "결제허브팀", status: "진행중", addedMonth: "2026-04" }
           ]
         }
       ]

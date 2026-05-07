@@ -494,6 +494,20 @@ body {
 .subkr-num-actual.mid  strong { color: var(--warning); }
 .subkr-num-actual.low  strong { color: var(--danger); }
 
+/* NEW 배지 */
+.task-new-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 /* 과제 상태 텍스트 라벨 */
 .task-label {
   display: inline-block;

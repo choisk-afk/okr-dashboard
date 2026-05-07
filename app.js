@@ -87,7 +87,15 @@
   }
 
   function isCompleted(status) {
-    return status === "완료" || status === "과제완료" || status === "실험완료, Roll-out";
+    return status === "완료" || status === "과제완료" || status === "실험완료, Roll-out" || (status || "").startsWith("과제완료");
+  }
+
+  function isNewTask(t) {
+    return t.addedMonth === getCurrentMonth();
+  }
+
+  function newBadge() {
+    return '<span class="task-new-badge">NEW</span>';
   }
 
   function getStatusCounts() {
@@ -424,6 +432,7 @@
                         const inner = `
                           <span class="task-label task-label-${status}">${status}</span>
                           <span class="kr-task-name">${t.name}</span>
+                          ${isNewTask(t) ? newBadge() : ""}
                           ${linkBadge}
                           <span class="dept">${t.team}</span>
                           <span class="kr-task-date">${dateStr || "-"}</span>
@@ -489,7 +498,7 @@
                 const wikiIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0065FF" stroke-width="2" style="display:inline;vertical-align:middle;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>`;
                 return `
                 <tr>
-                  <td style="font-weight:500;">${t.name}</td>
+                  <td style="font-weight:500;">${t.name}${isNewTask(t) ? " " + newBadge() : ""}</td>
                   <td>
                     <span style="color:var(--accent);font-weight:600;">${t.objId}</span>
                     <span style="font-size:12px;color:var(--text-muted);">${t.krId}</span>
@@ -532,9 +541,10 @@
 
     function renderOrgTask(t) {
       const taskLink = t.wikiLink || t.jiraLink || t.link || "";
+      const newMark = isNewTask(t) ? ' <span class="task-new-badge">NEW</span>' : '';
       const nameEl = taskLink
-        ? '<a class="org-task-name org-task-link" href="' + taskLink + '" target="_blank" rel="noopener">' + t.name + '</a>'
-        : '<div class="org-task-name">' + t.name + '</div>';
+        ? '<a class="org-task-name org-task-link" href="' + taskLink + '" target="_blank" rel="noopener">' + t.name + newMark + '</a>'
+        : '<div class="org-task-name">' + t.name + newMark + '</div>';
       const stCls = isCompleted(t.status) ? "과제완료" : t.status;
       const stDot = isCompleted(t.status) ? "완료" : t.status;
       const stLabel = isCompleted(t.status) ? "완료" : t.status;
