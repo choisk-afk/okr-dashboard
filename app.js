@@ -570,6 +570,94 @@
     el.innerHTML = '<div class="org-grid">' + Object.entries(teamMap).map(([team, tasks]) => renderOrgCard(team, tasks)).join("") + '</div>';
   }
 
+  // ─── Payment Share ───
+  function renderPaymentShare(month) {
+    const ps = OKR_DATA.paymentShare;
+    if (!ps) return "";
+
+    const availMonths = ps.months.filter(m => OKR_DATA.months.includes(m));
+    const methods = ps.methods;
+
+    // 현재 월 데이터 (배민페이 전체 제외한 개별 결제수단)
+    const displayMethods = methods.filter(m => m.name !== "배민페이(전체)");
+    const curData = displayMethods.map(m => ({ name: m.name, group: m.group, val: m.data[month] || 0 }))
+      .sort((a, b) => b.val - a.val);
+
+    // 추이 테이블 (주요 수단)
+    const trendMethods = ["배민페이(전체)", "신용/체크카드", "카카오페이", "네이버페이", "토스페이", "즉시할인", "휴대폰"];
+    const trendRows = trendMethods.map(name => {
+      const m = methods.find(x => x.name === name);
+      if (!m) return null;
+      const vals = availMonths.map(mo => m.data[mo] ?? "-");
+      return { name, vals };
+    }).filter(Boolean);
+
+    const groupColors = {
+      "배민페이": "#4f6ef7",
+      "간편3사":  "#f59e0b",
+      "일반":    "#6b7280",
+      "기타":    "#a78bfa"
+    };
+
+    const barRows = curData.map(d => {
+      const color = groupColors[d.group] || "#9ca3af";
+      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px;">
+        <div style="width:110px;font-size:12px;font-weight:500;color:var(--text-secondary);text-align:right;flex-shrink:0;">${d.name}</div>
+        <div style="flex:1;background:#f3f4f6;border-radius:4px;height:20px;overflow:hidden;">
+          <div style="height:100%;width:${Math.min(d.val * 2.5, 100)}%;background:${color};border-radius:4px;transition:width .4s ease;"></div>
+        </div>
+        <div style="width:44px;font-size:12px;font-weight:700;color:${color};flex-shrink:0;">${d.val.toFixed(2)}%</div>
+      </div>`;
+    }).join("");
+
+    const thStyle = `style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;padding:8px 12px;border-bottom:2px solid var(--border);text-align:center;"`;
+    const tdStyle = `style="font-size:13px;padding:9px 12px;text-align:center;border-bottom:1px solid #f3f4f6;"`;
+
+    const trendTable = `
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr>
+          <th style="font-size:11px;font-weight:600;color:var(--text-muted);padding:8px 12px;border-bottom:2px solid var(--border);text-align:left;">결제수단</th>
+          ${availMonths.map(m => `<th ${thStyle}>${OKR_DATA.monthLabels[m]}</th>`).join("")}
+        </tr></thead>
+        <tbody>
+          ${trendRows.map(r => `<tr>
+            <td style="font-size:13px;font-weight:500;padding:9px 12px;border-bottom:1px solid #f3f4f6;">${r.name}</td>
+            ${r.vals.map((v, i) => {
+              const prev = i > 0 ? r.vals[i-1] : null;
+              const diff = (prev !== null && v !== "-" && prev !== "-") ? (v - prev).toFixed(2) : null;
+              const color = diff === null ? "" : parseFloat(diff) > 0 ? "color:var(--success);" : parseFloat(diff) < 0 ? "color:var(--danger);" : "";
+              const arrow = diff === null ? "" : parseFloat(diff) > 0 ? "▲" : parseFloat(diff) < 0 ? "▼" : "–";
+              return `<td ${tdStyle}>${v !== "-" ? v.toFixed(2)+"%" : "-"}${diff !== null ? `<span style="font-size:10px;margin-left:3px;${color}">${arrow}${Math.abs(parseFloat(diff)).toFixed(2)}</span>` : ""}</td>`;
+            }).join("")}
+          </tr>`).join("")}
+        </tbody>
+      </table>`;
+
+    return `
+      <div style="margin-top:32px;padding-top:28px;border-top:2px solid var(--border);">
+        <div style="font-size:16px;font-weight:700;margin-bottom:4px;">결제수단별 점유율</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:24px;">금액 기준 · 보조결제수단 포함 · ${getMonthDisplayLabel(month)} 기준</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:14px;">이번 달 수단별 점유율</div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;">
+              ${Object.entries(groupColors).map(([g, c]) => `<span style="font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${c};"></span>${g === "간편3사" ? "간편결제 3사" : g === "배민페이" ? "배민페이 계열" : g === "일반" ? "신용/체크카드" : "기타"}</span>`).join("")}
+            </div>
+            ${barRows}
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:14px;">주요 결제수단 추이</div>
+            <div style="position:relative;height:220px;"><canvas id="payShareChart"></canvas></div>
+          </div>
+        </div>
+
+        <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:12px;">월별 상세 추이</div>
+        <div style="overflow-x:auto;">${trendTable}</div>
+      </div>
+    `;
+  }
+
   // ─── AI Report ───
   function renderAIReport() {
     const month = getCurrentMonth();
@@ -613,9 +701,48 @@
             <div class="ai-section-title"><span class="icon blue">→</span>개선 권고사항</div>
             <ul class="ai-list recommendations">${report.recommendations.map(r => `<li>${r}</li>`).join("")}</ul>
           </div>
+
+          ${renderPaymentShare(month)}
         </div>
       </div>
     `;
+    renderPayShareChart(month);
+  }
+
+  function renderPayShareChart(month) {
+    if (state.charts.payShare) { state.charts.payShare.destroy(); state.charts.payShare = null; }
+    const ctx = document.getElementById("payShareChart");
+    if (!ctx || !OKR_DATA.paymentShare) return;
+
+    const ps = OKR_DATA.paymentShare;
+    const trendMethods = ["배민페이(전체)", "신용/체크카드", "카카오페이", "네이버페이", "토스페이", "즉시할인"];
+    const colors = ["#4f6ef7", "#6b7280", "#f59e0b", "#10b981", "#a78bfa", "#f97316"];
+    const availMonths = ps.months.filter(m => OKR_DATA.months.includes(m));
+    const labels = availMonths.map(m => OKR_DATA.monthLabels[m]);
+
+    const datasets = trendMethods.map((name, i) => {
+      const m = ps.methods.find(x => x.name === name);
+      return {
+        label: name,
+        data: availMonths.map(mo => m ? (m.data[mo] ?? null) : null),
+        borderColor: colors[i],
+        backgroundColor: colors[i] + "20",
+        tension: 0.3, fill: false, pointRadius: 4, borderWidth: 2
+      };
+    });
+
+    state.charts.payShare = new Chart(ctx, {
+      type: "line",
+      data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom", labels: { usePointStyle: true, padding: 10, font: { size: 10 } } } },
+        scales: {
+          y: { ticks: { callback: v => v + "%" }, grid: { color: "#f3f4f6" } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
   }
 
   render();
