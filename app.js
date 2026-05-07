@@ -588,12 +588,23 @@
       .sort((a, b) => b.val - a.val);
 
     // 추이 테이블 (주요 수단)
-    const trendMethods = ["배민페이(전체)", "신용/체크카드", "카카오페이", "네이버페이", "토스페이", "즉시할인", "휴대폰"];
-    const trendRows = trendMethods.map(name => {
-      const m = methods.find(x => x.name === name);
+    const trendConfig = [
+      { name: "배민페이(전체)", indent: false, bold: true },
+      { name: "배민페이카드",   indent: true,  bold: false },
+      { name: "배민페이머니",   indent: true,  bold: false },
+      { name: "배민페이계좌",   indent: true,  bold: false },
+      { name: "신용/체크카드",  indent: false, bold: false },
+      { name: "카카오페이",     indent: false, bold: false },
+      { name: "네이버페이",     indent: false, bold: false },
+      { name: "토스페이",       indent: false, bold: false },
+      { name: "즉시할인",       indent: false, bold: false },
+      { name: "휴대폰",         indent: false, bold: false },
+    ];
+    const trendRows = trendConfig.map(cfg => {
+      const m = methods.find(x => x.name === cfg.name);
       if (!m) return null;
       const vals = availMonths.map(mo => m.data[mo] ?? "-");
-      return { name, vals };
+      return { ...cfg, vals };
     }).filter(Boolean);
 
     const groupColors = {
@@ -626,8 +637,8 @@
           ${availMonths.map(m => `<th ${thStyle}>${OKR_DATA.monthLabels[m]}</th>`).join("")}
         </tr></thead>
         <tbody>
-          ${trendRows.map(r => `<tr>
-            <td style="font-size:13px;font-weight:500;padding:9px 12px;border-bottom:1px solid #f3f4f6;">${r.name}</td>
+          ${trendRows.map(r => `<tr style="${r.indent ? 'background:#fafbfc;' : ''}">
+            <td style="font-size:13px;padding:9px 12px;border-bottom:1px solid #f3f4f6;${r.bold ? 'font-weight:700;' : 'font-weight:500;'}${r.indent ? 'padding-left:28px;color:var(--text-secondary);' : ''}">${r.indent ? '└ ' : ''}${r.name}</td>
             ${r.vals.map((v, i) => {
               const prev = i > 0 ? r.vals[i-1] : null;
               const diff = (prev !== null && v !== "-" && prev !== "-") ? (v - prev).toFixed(2) : null;
@@ -769,8 +780,8 @@
     if (!ctx || !OKR_DATA.paymentShare) return;
 
     const ps = OKR_DATA.paymentShare;
-    const trendMethods = ["배민페이(전체)", "신용/체크카드", "카카오페이", "네이버페이", "토스페이", "즉시할인"];
-    const colors = ["#4f6ef7", "#6b7280", "#f59e0b", "#10b981", "#a78bfa", "#f97316"];
+    const trendMethods = ["배민페이(전체)", "배민페이카드", "배민페이머니", "배민페이계좌", "신용/체크카드", "카카오페이", "네이버페이", "토스페이", "즉시할인"];
+    const colors = ["#4f6ef7", "#6b8ae7", "#93c5fd", "#a5b4fc", "#6b7280", "#f59e0b", "#10b981", "#a78bfa", "#f97316"];
     const availMonths = ps.months.filter(m => OKR_DATA.months.includes(m));
     const labels = availMonths.map(m => OKR_DATA.monthLabels[m]);
 
