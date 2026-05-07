@@ -715,16 +715,77 @@
     var el = document.getElementById("ar-metrics");
     if (!el) return;
     var ar = OKR_DATA.arMetrics;
-    if (!ar || !ar.length) {
-      el.innerHTML = "<div class='card' style='text-align:center;padding:60px 20px;'>"
-        + "<div style='font-size:40px;margin-bottom:16px;'>📡</div>"
-        + "<div style='font-size:16px;font-weight:600;margin-bottom:8px;'>AR 지표 데이터 준비중</div>"
-        + "<div style='color:var(--text-muted);font-size:14px;'>데이터 입력 후 바로 표시됩니다.</div>"
-        + "</div>";
-      return;
+    if (!ar) { el.innerHTML = ""; return; }
+
+    var month = getCurrentMonth();
+    var availMonths = ar.months.filter(function(m) { return OKR_DATA.months.includes(m); });
+    var mHdr = function(t, right) { return "<th style='font-size:11px;font-weight:600;color:var(--text-muted);padding:8px 12px;border-bottom:2px solid var(--border);text-align:" + (right ? "right" : "left") + ";'>" + t + "</th>"; };
+    var monthHdrs = availMonths.map(function(m) { return mHdr(OKR_DATA.monthLabels[m], true); }).join("");
+
+    // 전체 AR 트렌드 카드
+    var overallRows = availMonths.map(function(m) {
+      var v = ar.overall[m];
+      var target = OKR_DATA.objectives[2] && OKR_DATA.objectives[2].keyResults[0] ? OKR_DATA.objectives[2].keyResults[0].monthly[m] : null;
+      var tgt = target ? target.target : null;
+      var diff = (tgt !== null && v !== undefined) ? (v - tgt).toFixed(2) : null;
+      var diffColor = diff === null ? "" : parseFloat(diff) >= 0 ? "var(--success)" : "var(--danger)";
+      return "<tr>"
+        + "<td style='font-size:13px;font-weight:500;padding:9px 12px;border-bottom:1px solid #f3f4f6;'>전체 결제 AR</td>"
+        + availMonths.map(function(mo) {
+            var val = ar.overall[mo];
+            var t = OKR_DATA.objectives[2] && OKR_DATA.objectives[2].keyResults[0] ? OKR_DATA.objectives[2].keyResults[0].monthly[mo] : null;
+            var tgt = t ? t.target : null;
+            var d = (tgt && val) ? (val - tgt).toFixed(2) : null;
+            var dc = d === null ? "" : parseFloat(d) >= 0 ? "color:var(--success);" : "color:var(--danger);";
+            return "<td style='font-size:13px;padding:9px 12px;border-bottom:1px solid #f3f4f6;text-align:right;'>"
+              + "<div style='font-weight:700;'>" + (val !== undefined ? val.toFixed(2) + "%" : "-") + "</div>"
+              + (tgt ? "<div style='font-size:11px;color:var(--text-muted);'>목표 " + tgt.toFixed(2) + "%</div>" : "")
+              + (d ? "<div style='font-size:11px;font-weight:600;" + dc + "'>" + (parseFloat(d) >= 0 ? "+" : "") + d + "%p</div>" : "")
+              + "</td>";
+          }).join("")
+        + "</tr>";
+    })[0] || "";
+
+    // 결제수단별 AR (methods 데이터가 있을 때)
+    var methodsSection = "";
+    if (ar.methods && ar.methods.length > 0) {
+      var methodRows = ar.methods.map(function(met) {
+        return "<tr>"
+          + "<td style='font-size:13px;font-weight:500;padding:9px 12px;border-bottom:1px solid #f3f4f6;'>" + met.name + "</td>"
+          + availMonths.map(function(m) {
+              var v = met.monthly ? met.monthly[m] : null;
+              if (!v) return "<td style='padding:9px 12px;border-bottom:1px solid #f3f4f6;text-align:right;color:var(--text-muted);'>-</td>";
+              var color = v >= 99.5 ? "var(--success)" : v >= 99.0 ? "var(--warning)" : "var(--danger)";
+              return "<td style='font-size:13px;padding:9px 12px;border-bottom:1px solid #f3f4f6;text-align:right;font-weight:700;color:" + color + ";'>" + v.toFixed(2) + "%</td>";
+            }).join("")
+          + "</tr>";
+      }).join("");
+
+      methodsSection = "<div style='margin-top:24px;'>"
+        + "<div style='font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;'>결제수단별 AR</div>"
+        + "<div style='overflow-x:auto;'><table style='width:100%;border-collapse:collapse;'>"
+        + "<thead><tr style='background:#f8f9fb;'>" + mHdr("결제수단", false) + monthHdrs + "</tr></thead>"
+        + "<tbody>" + methodRows + "</tbody></table></div></div>";
+    } else {
+      methodsSection = "<div style='margin-top:20px;padding:20px;background:#f8f9fb;border-radius:10px;border:1.5px dashed var(--border);text-align:center;'>"
+        + "<div style='font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;'>결제수단별 AR 데이터 입력 대기</div>"
+        + "<div style='font-size:12px;color:var(--text-muted);line-height:1.6;'>"
+        + "Zeppelin 노트북 <strong>06.Success Rate</strong>의 결제수단별 success/fail 집계값을<br>"
+        + "<code style='background:#e5e7eb;padding:2px 6px;border-radius:4px;'>data.js → arMetrics.methods</code> 배열에 입력해주세요.<br>"
+        + "<span style='font-size:11px;margin-top:6px;display:block;'>예: { name: \"배민페이카드\", monthly: { \"2026-04\": 99.21 } }</span>"
+        + "</div></div>";
     }
-    // 데이터 입력 후 렌더링 로직 추가 예정
-    el.innerHTML = "<div class='card'><div class='card-title'>AR 지표</div><pre>" + JSON.stringify(ar, null, 2) + "</pre></div>";
+
+    el.innerHTML = "<div class='card'>"
+      + "<div class='card-title'>AR 지표 <span style='font-size:12px;font-weight:400;color:var(--text-muted);'>(Authorization Rate · 결제 성공률)</span></div>"
+      + "<div style='font-size:12px;color:var(--text-muted);margin-bottom:4px;'>" + ar.source + "</div>"
+      + "<div style='font-size:11px;color:var(--text-muted);margin-bottom:20px;padding:5px 10px;background:#f8f9fb;border-radius:6px;display:inline-block;'>" + ar.note + "</div>"
+      + "<div style='font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;'>전체 AR (OKR KR3-1 기준)</div>"
+      + "<div style='overflow-x:auto;'><table style='width:100%;border-collapse:collapse;'>"
+      + "<thead><tr style='background:#f8f9fb;'>" + mHdr("구분", false) + monthHdrs + "</tr></thead>"
+      + "<tbody>" + overallRows + "</tbody></table></div>"
+      + methodsSection
+      + "</div>";
   }
 
   // --- 결정실 완료보고 ---
