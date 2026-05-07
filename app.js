@@ -155,6 +155,7 @@
     renderAIReport();
     renderPayShareSection();
     renderGiftSection();
+    renderCompletionReports();
   }
 
   // ─── Overview ───
@@ -706,6 +707,51 @@
         })() : ""}
       </div>
     `;
+  }
+
+  // --- 결정실 완료보고 ---
+  function renderCompletionReports() {
+    var el = document.getElementById("completion-reports");
+    if (!el) return;
+    var reports = OKR_DATA.completionReports || [];
+
+    var teamColors = {
+      "결제플랫폼팀":    "#4f6ef7",
+      "결제허브팀":      "#10b981",
+      "정산플랫폼팀":    "#f59e0b",
+      "배민페이플랫폼팀":"#a78bfa",
+      "배민선물하기팀":  "#f97316",
+      "결제웹프론트개발팀":"#6b7280"
+    };
+
+    var cards = reports.map(function(r) {
+      var color = teamColors[r.team] || "#6b7280";
+      var highlights = r.highlights.map(function(h) {
+        return "<li style='font-size:12px;color:var(--text-secondary);padding:3px 0;display:flex;gap:6px;'><span style='color:" + color + ";flex-shrink:0;'>✓</span>" + h + "</li>";
+      }).join("");
+
+      return "<div style='background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;'>"
+        + "<div style='padding:14px 18px;border-left:4px solid " + color + ";'>"
+        + "<div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;'>"
+        + "<span style='font-size:11px;font-weight:700;color:" + color + ";background:' + color + '20;padding:2px 8px;border-radius:4px;background:' + color + '15;'>" + r.team + "</span>"
+        + "<span style='font-size:11px;color:var(--text-muted);'>" + r.date + "</span>"
+        + "</div>"
+        + "<div style='font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:8px;line-height:1.4;'>" + r.title + "</div>"
+        + "<div style='font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px;'>" + r.summary + "</div>"
+        + "<ul style='list-style:none;margin:0 0 12px 0;padding:0;'>" + highlights + "</ul>"
+        + "<a href='" + r.url + "' target='_blank' rel='noopener' style='display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:" + color + ";text-decoration:none;'>"
+        + "<svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5'><rect x='3' y='3' width='18' height='18' rx='2'/><path d='M7 8h10M7 12h10M7 16h6'/></svg>"
+        + "위키 원문 보기"
+        + "</a>"
+        + "</div></div>";
+    }).join("");
+
+    el.innerHTML = "<div class='card'>"
+      + "<div class='card-title'>결정실 완료보고</div>"
+      + "<div style='font-size:12px;color:var(--text-muted);margin-bottom:20px;'>2026년 결제정산프로덕트실 팀별 완료 과제 성과 요약 · Confluence 기반</div>"
+      + "<div style='display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;'>"
+      + cards
+      + "</div></div>";
   }
 
   // --- 선물하기 지표 섹션 ---

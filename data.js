@@ -341,6 +341,72 @@ const OKR_DATA = {
       ]
     }
   ],
+  completionReports: [
+    {
+      id: "CR1",
+      team: "배민선물하기팀",
+      title: "[효과분석] 상품권 수신자 셀프환불 (배포 후 1달 성과)",
+      date: "2026-03-31",
+      summary: "3/19 배포된 셀프환불 기능이 관련 VOC를 57% 감소시키며 CS 인입율 OKR 달성에 기여. 미등록 만료 환불 VOC 일평균 5.87건→2.11건(▼64%), 소멸알림톡 VOC 2.04→1.11건(▼45%).",
+      highlights: ["VOC 57% 감소 (배포 전→후)", "고객 자가해결 체계 구축", "2026 CS OKR 연간 목표(▼30%) 기여"],
+      url: "https://cloud.wiki.woowa.in/wiki/spaces/GIFT/pages/1059165667/1"
+    },
+    {
+      id: "CR2",
+      team: "결제허브팀",
+      title: "GS25·GS더프레시 미회수반품완료 정산 메일 자동화",
+      date: "2026-05-06",
+      summary: "n8n 워크플로우를 활용해 매주 월요일 전주 정산 데이터를 Excel로 자동 생성·이메일 발송. 주 1회 최대 30분 수작업을 완전 자동화. KR4-1 운영 처리시간 단축 과제 기여.",
+      highlights: ["주 30분 수작업 자동화 완료", "n8n 워크플로우 구축", "운영 처리시간 단축 KR 기여"],
+      url: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/1126057083/GS25+GS"
+    },
+    {
+      id: "CR3",
+      team: "정산플랫폼팀",
+      title: "260121) 정산플랫폼팀 비용절감",
+      date: "2026-02-02",
+      summary: "경정청구DB 삭제로 일별 스토리지 $61 절감(연간 $22,265), 셀러/라이더정산 베타 배치 agent 삭제로 월 $156 절감, 배민정산 베타 서버 스펙다운으로 월 $250 절감. 총 연간 약 $27K+ 비용 절감 달성.",
+      highlights: ["연간 $22,265 DB 스토리지 절감", "월 $406 추가 인프라 절감", "KR4-4 인프라 비용 절감 OKR 기여"],
+      url: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/973648191/260121"
+    },
+    {
+      id: "CR4",
+      team: "정산플랫폼팀",
+      title: "[AI 자동화] 운영업무 AI 대체 가능성 검토 결과",
+      date: "2026-05-06",
+      summary: "10개 운영업무 대상 AI 대체 가능성 분석. 과제 사전 검토 자동화(★★★★☆), 정산 이상 탐지 자동화 등 고가능성 아이템 발굴. AI 활용 - 운영업무 자동화 과제의 실행 기반 마련.",
+      highlights: ["10개 운영업무 AI 대체 가능성 분석 완료", "과제 사전 검토 자동화 PoC 설계", "운영 레버리지 KR과 연계된 AI 로드맵 수립"],
+      url: "https://cloud.wiki.woowa.in/wiki/spaces/SETTLESYS/pages/1127155165/AI+AI"
+    },
+    {
+      id: "CR5",
+      team: "결제허브팀",
+      title: "AWS Bedrock KB 기반 AI 지능형 장애 분석 봇 PoC",
+      date: "2026-02-09",
+      summary: "AWS Bedrock Knowledge Bases를 활용해 소스코드·로그를 연결하는 AI 장애 분석 봇 기술 검증. 해커톤 아이디어를 PoC로 발전시켜 장애 원인 즉각 추론 가능성 확인.",
+      highlights: ["AI 장애 분석 봇 PoC 완료", "AWS Bedrock KB 기술 검증", "장애대응 자동화 과제 기술 기반 확보"],
+      url: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/984139043/AWS+Bedrock+KB+AI+PoC"
+    },
+    {
+      id: "CR6",
+      team: "결제플랫폼팀",
+      title: "[2026] 결제플랫폼팀 DevX 결과 분석",
+      date: "2026-04-14",
+      summary: "2026 Q1 DevX Survey 결과 분석. 팀의 소프트웨어 제공 방식, 집중시간, 배포 용이성 등 8개 항목 NPS 측정. 결제플랫폼팀 강점 및 개선 포인트 도출.",
+      highlights: ["Q1 DevX Survey 전팀 분석 완료", "배포/출시 용이성 항목 개선 필요 식별", "개발 생산성 향상 과제 우선순위 도출"],
+      url: "https://cloud.wiki.woowa.in/wiki/spaces/PAYPLATFORM/pages/1085378692/2026+DevX"
+    },
+    {
+      id: "CR7",
+      team: "결제허브팀",
+      title: "2026 Q1 DevX Survey 결과 분석 (결제정산프로덕트실)",
+      date: "2026-04-08",
+      summary: "결제정산프로덕트실 전체 DevX Survey 분석(응답률 85.7%, 30명/35명). 집중시간·자동화 비중 높은 결제허브팀 강점 확인, 코드 품질 및 정보탐색 영역 개선 과제 도출.",
+      highlights: ["응답률 85.7% (30/35명)", "자동화 비중 높아 집중시간 지표 양호", "2025→2026 NPS 변화 추이 분석"],
+      url: "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTHUB/pages/1074738356/2026+Q1+DevX+Survey"
+    }
+  ],
+
   giftMetrics: {
     annualTarget: 869380000000,
     months: ["2026-01", "2026-02", "2026-03", "2026-04"],
