@@ -535,6 +535,37 @@
   }
 
   // ─── Org View ───
+  function orgViewStatusRank(t) {
+    if (t.status === "홀딩" || t.status === "드랍") return 3;
+    if (isCompleted(t.status)) return 2;
+    if (t.status === "계획중") return 0;
+    if (t.status === "진행중") return 1;
+    return 1;
+  }
+
+  function orgViewTimeMs(t) {
+    var raw = isCompleted(t.status)
+      ? (t.completedDate || t.targetDate)
+      : t.targetDate;
+    if (!raw || String(raw).trim() === "") return Number.MAX_SAFE_INTEGER;
+    var s = String(raw).trim();
+    var m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (m) {
+      var ms = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).getTime();
+      return isNaN(ms) ? Number.MAX_SAFE_INTEGER : ms;
+    }
+    var p = Date.parse(s);
+    return isNaN(p) ? Number.MAX_SAFE_INTEGER : p;
+  }
+
+  function sortOrgTasks(tasks) {
+    return tasks.slice().sort(function(a, b) {
+      var ra = orgViewStatusRank(a), rb = orgViewStatusRank(b);
+      if (ra !== rb) return ra - rb;
+      return orgViewTimeMs(a) - orgViewTimeMs(b);
+    });
+  }
+
   function renderOrgView() {
     const teamMap = {};
     OKR_DATA.objectives.forEach(obj => {
@@ -555,12 +586,19 @@
       const stCls = isCompleted(t.status) ? "과제완료" : t.status;
       const stDot = isCompleted(t.status) ? "완료" : t.status;
       const stLabel = isCompleted(t.status) ? "완료" : t.status;
+      var dateHtml = "";
+      if (isCompleted(t.status)) {
+        var doneD = t.completedDate || t.targetDate;
+        if (doneD) dateHtml = '<span class="org-badge-date"> · ' + doneD + "</span>";
+      } else if (t.status === "진행중" && t.targetDate) {
+        dateHtml = '<span class="org-badge-date"> · ~' + t.targetDate + "</span>";
+      }
       return '<div class="org-task-item">'
         + '<span class="org-task-okr">' + t.objId + ' / ' + t.krId + '</span>'
         + '<div class="org-task-info">'
         + nameEl
         + '<div class="org-task-status">'
-        + '<span class="status-badge ' + stCls + '"><span class="task-status ' + stDot + '"></span>' + stLabel + '</span>'
+        + '<span class="status-badge ' + stCls + '"><span class="task-status ' + stDot + '"></span>' + stLabel + dateHtml + '</span>'
         + '</div></div></div>';
     }
 
@@ -574,7 +612,7 @@
     }
 
     const el = document.getElementById("org-view");
-    el.innerHTML = '<div class="org-grid">' + Object.entries(teamMap).map(([team, tasks]) => renderOrgCard(team, tasks)).join("") + '</div>';
+    el.innerHTML = '<div class="org-grid">' + Object.entries(teamMap).map(([team, tasks]) => renderOrgCard(team, sortOrgTasks(tasks))).join("") + '</div>';
   }
 
   // ─── Payment Share ───
@@ -1005,7 +1043,10 @@
       el.innerHTML = '<div class="card" style="color:red;">렌더 오류: ' + e.message + '</div>';
       console.error("renderPayShareSection error:", e);
     }
-    setTimeout(() => renderPayShareChart(getCurrentMonth()), 100);
+    // 숨겨진 display:none 영역에서 Chart를 그리면 캔버스 크기 0 → 빈 그래프. 활성 탭일 때만 그린다.
+    setTimeout(() => {
+      if (state.currentSection === "pay-share") renderPayShareChart(getCurrentMonth());
+    }, 100);
   }
 
   // ─── AI Report ───
