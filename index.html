@@ -10,7 +10,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <script>
+  (function() {
+    var l = document.createElement("link");
+    l.rel = "stylesheet";
+    l.href = "style.css?t=" + Date.now();
+    document.head.appendChild(l);
+  })();
+  </script>
 </head>
 <body>
 
@@ -119,7 +126,7 @@
   function next() {
     if (idx >= files.length) return;
     var url = files[idx++] + '?nocache=' + Date.now() + '&r=' + Math.random().toString(36).slice(2);
-    fetch(url, { cache: 'no-store' })
+    fetch(url, { cache: "no-store" })
       .then(function(r) { return r.text(); })
       .then(function(code) {
         var s = document.createElement('script');
