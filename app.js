@@ -890,19 +890,55 @@
     }).join("");
 
     var oc = gm.orderCount;
-    var ocRow = "<tr><td style='font-size:13px;font-weight:500;padding:9px 12px;border-bottom:1px solid #f3f4f6;'>" + oc.name + "</td>"
-      + "<td " + tdS + ">" + oc.annualTarget.toLocaleString() + "만건</td>"
-      + availMonths.map(function(mo) {
-          var v = oc.monthly[mo];
-          if (!v) return "<td " + tdS + ">-</td>";
-          var pct = v.target > 0 ? Math.round(v.actual / v.target * 100) : null;
-          var col = pct === null ? "" : pct >= 90 ? "var(--success)" : pct >= 70 ? "var(--warning)" : "var(--danger)";
-          return "<td " + tdS + "><div style='font-weight:600;'>" + v.actual.toLocaleString() + "만</div>"
-            + "<div style='font-size:11px;color:var(--text-muted);'>목표 " + v.target.toLocaleString() + "만</div>"
-            + (pct !== null ? "<div style='font-size:11px;font-weight:700;color:" + col + ";'>" + pct + "%</div>" : "")
-            + "</td>";
-        }).join("")
-      + "</tr>";
+
+    // subKR 데이터 - KR1-3의 subKRs에서 직접 가져옴
+    var kr13 = null;
+    OKR_DATA.objectives.forEach(function(obj) {
+      obj.keyResults.forEach(function(kr) {
+        if (kr.id === "KR1-3") kr13 = kr;
+      });
+    });
+    var subKR0 = kr13 && kr13.subKRs ? kr13.subKRs[0] : null; // 배민 발행 상품권
+    var subKR1 = kr13 && kr13.subKRs ? kr13.subKRs[1] : null; // 외부 교환권
+
+    function ocCell(v, tdStyle) {
+      if (!v) return "<td " + tdStyle + ">-</td>";
+      var pct = v.target > 0 ? Math.round(v.actual / v.target * 100) : null;
+      var col = pct === null ? "" : pct >= 90 ? "var(--success)" : pct >= 70 ? "var(--warning)" : "var(--danger)";
+      return "<td " + tdStyle + "><div style='font-weight:600;'>" + v.actual.toLocaleString() + "만</div>"
+        + "<div style='font-size:11px;color:var(--text-muted);'>목표 " + v.target.toLocaleString() + "만</div>"
+        + (pct !== null ? "<div style='font-size:11px;font-weight:700;color:" + col + ";'>" + pct + "%</div>" : "")
+        + "</td>";
+    }
+
+    function subCell(subKr, mo, tdStyle) {
+      if (!subKr || !subKr.monthly || !subKr.monthly[mo]) return "<td " + tdStyle + ">-</td>";
+      var sd = subKr.monthly[mo];
+      // subKR monthly는 {t, a} 형태
+      var actual = Math.round(sd.a / 10000) / 100; // 만건 변환
+      var target = Math.round(sd.t / 10000) / 100;
+      var pct = target > 0 ? Math.round(actual / target * 100) : null;
+      var col = pct === null ? "" : pct >= 90 ? "var(--success)" : pct >= 70 ? "var(--warning)" : "var(--danger)";
+      return "<td " + tdStyle + "><div style='font-weight:500;'>" + actual.toLocaleString() + "만</div>"
+        + "<div style='font-size:11px;color:var(--text-muted);'>목표 " + target.toLocaleString() + "만</div>"
+        + (pct !== null ? "<div style='font-size:11px;font-weight:700;color:" + col + ";'>" + pct + "%</div>" : "")
+        + "</td>";
+    }
+
+    var subTdS = "style='font-size:13px;padding:7px 12px 7px 28px;border-bottom:1px solid #f3f4f6;text-align:right;background:#fafbfc;'";
+
+    var ocRow = "<tr style='background:#f0f4ff;'><td style='font-size:13px;font-weight:700;padding:9px 12px;border-bottom:1px solid #e5e7eb;'>📦 " + oc.name + "</td>"
+      + "<td " + tdS + " style='font-size:13px;padding:9px 12px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:700;'>" + oc.annualTarget.toLocaleString() + "만건</td>"
+      + availMonths.map(function(mo) { return ocCell(oc.monthly[mo], tdS + " style='font-size:13px;padding:9px 12px;border-bottom:1px solid #e5e7eb;text-align:right;'"); }).join("")
+      + "</tr>"
+      + (subKR0 ? "<tr><td style='font-size:12px;color:var(--text-secondary);padding:7px 12px 7px 28px;border-bottom:1px solid #f3f4f6;background:#fafbfc;'>└ 배민 발행 상품권</td>"
+        + "<td " + subTdS + ">5,140만건</td>"
+        + availMonths.map(function(mo) { return subCell(subKR0, mo, subTdS); }).join("")
+        + "</tr>" : "")
+      + (subKR1 ? "<tr><td style='font-size:12px;color:var(--text-secondary);padding:7px 12px 7px 28px;border-bottom:1px solid #f3f4f6;background:#fafbfc;'>└ 외부 교환권</td>"
+        + "<td " + subTdS + ">540만건</td>"
+        + availMonths.map(function(mo) { return subCell(subKR1, mo, subTdS); }).join("")
+        + "</tr>" : "");
 
     var mHdr = function(t) { return "<th style='font-size:11px;font-weight:600;color:var(--text-muted);padding:8px 12px;border-bottom:2px solid var(--border);text-align:right;'>" + t + "</th>"; };
     var monthHdrs = availMonths.map(function(m) { return mHdr(OKR_DATA.monthLabels[m]); }).join("");
