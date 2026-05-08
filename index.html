@@ -12,9 +12,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <script>
   (function() {
+    window.__DASH_ASSET_V = Date.now() + "_" + Math.random().toString(36).slice(2, 10);
     var l = document.createElement("link");
     l.rel = "stylesheet";
-    l.href = "style.css?t=" + Date.now();
+    l.href = "style.css?v=" + window.__DASH_ASSET_V;
     document.head.appendChild(l);
   })();
   </script>
@@ -22,7 +23,7 @@
 <body>
 
 <!-- 로그인 오버레이 -->
-<div id="auth-overlay" style="display:none;position:fixed;inset:0;background:#f0f2f5;z-index:9999;display:flex;align-items:center;justify-content:center;">
+<div id="auth-overlay" style="position:fixed;inset:0;background:#f0f2f5;z-index:9999;display:flex;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:16px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.10);">
     <div style="text-align:center;margin-bottom:32px;">
       <div style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;background:#4f6ef7;border-radius:14px;margin-bottom:16px;">
@@ -120,23 +121,25 @@
 </main>
 
 <script>
-(function() {
-  var files = ['data.js', 'auth.js', 'app.js'];
-  var idx = 0;
-  function next() {
-    if (idx >= files.length) return;
-    var url = files[idx++] + '?nocache=' + Date.now() + '&r=' + Math.random().toString(36).slice(2);
-    fetch(url, { cache: "no-store" })
-      .then(function(r) { return r.text(); })
-      .then(function(code) {
-        var s = document.createElement('script');
-        s.text = code;
-        document.head.appendChild(s);
-        next();
-      })
-      .catch(function(e) { console.error('Load failed:', url, e); });
+(function () {
+  var v = window.__DASH_ASSET_V || (Date.now() + "_" + Math.random().toString(36).slice(2, 10));
+
+  function loadScript(name, onload) {
+    var s = document.createElement("script");
+    s.src = name + "?v=" + encodeURIComponent(v);
+    s.async = false;
+    s.onload = onload;
+    s.onerror = function () {
+      console.error("[대시보드] 스크립트 로드 실패:", name, "- 새로고침(Cmd+Shift+R) 후에도 동일하면 배포·경로를 확인하세요.");
+    };
+    document.head.appendChild(s);
   }
-  next();
+
+  loadScript("data.js", function () {
+    loadScript("auth.js", function () {
+      loadScript("app.js", function () {});
+    });
+  });
 })();
 </script>
 </body>
