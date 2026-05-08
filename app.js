@@ -943,6 +943,29 @@
     var mHdr = function(t) { return "<th style='font-size:11px;font-weight:600;color:var(--text-muted);padding:8px 12px;border-bottom:2px solid var(--border);text-align:right;'>" + t + "</th>"; };
     var monthHdrs = availMonths.map(function(m) { return mHdr(OKR_DATA.monthLabels[m]); }).join("");
 
+    function giftAIHTML(mo) {
+      var ga = gm.analysis && gm.analysis[mo];
+      if (!ga) return "";
+      var h = "<div style='margin-top:28px;padding-top:24px;border-top:1.5px solid var(--border);'>"
+        + "<div style='font-size:15px;font-weight:700;margin-bottom:6px;'>AI 리포트</div>"
+        + "<div style='font-size:12px;color:var(--text-muted);margin-bottom:14px;'>" + getMonthDisplayLabel(mo)
+        + " · 선물하기 지표 목표 대비 격차 및 미달성 요인(대시보드 집계·KR1-3 과제 맥락). 추정 부분은 별도 영업·제휴 데이터로 확인이 필요합니다.</div>"
+        + "<div style='font-size:14px;line-height:1.7;color:var(--text-secondary);padding:16px 20px;background:#f8f9fb;border-radius:10px;border-left:4px solid var(--accent);margin-bottom:16px;'>" + ga.summary + "</div>";
+      if (ga.gaps && ga.gaps.length) {
+        h += "<div style='font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;'>미달성·리스크 사유</div>"
+          + "<div style='display:flex;flex-direction:column;gap:10px;'>";
+        ga.gaps.forEach(function(g) {
+          h += "<div style='padding:14px 18px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;'>"
+            + "<div style='font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:6px;'>" + g.title + "</div>"
+            + "<div style='font-size:13px;line-height:1.65;color:var(--text-secondary);'>" + g.detail + "</div>"
+            + "</div>";
+        });
+        h += "</div>";
+      }
+      h += "</div>";
+      return h;
+    }
+
     return "<div style='margin-top:32px;padding-top:28px;border-top:2px solid var(--border);'>"
       + "<div style='font-size:16px;font-weight:700;margin-bottom:4px;'>선물하기 지표</div>"
       + "<div style='font-size:12px;color:var(--text-muted);margin-bottom:4px;'>2026 발행금액 목표 (2604ver.) · 주문수 누적 기준</div>"
@@ -956,6 +979,7 @@
       + "<div style='overflow-x:auto;'><table style='width:100%;border-collapse:collapse;'>"
       + "<thead><tr style='background:#f8f9fb;'><th " + thLS + ">항목</th>" + mHdr("연간목표") + monthHdrs + "</tr></thead>"
       + "<tbody>" + ocRow + "</tbody></table></div>"
+      + giftAIHTML(month)
       + "</div>";
   }
 
