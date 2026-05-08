@@ -577,6 +577,13 @@
       });
     });
 
+    function fmtOrgShortDate(iso) {
+      if (!iso) return "";
+      var m = String(iso).match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      if (!m) return String(iso);
+      return parseInt(m[2], 10) + "/" + parseInt(m[3], 10);
+    }
+
     function renderOrgTask(t) {
       const taskLink = t.wikiLink || t.jiraLink || t.link || "";
       const newMark = isNewTask(t) ? ' <span class="task-new-badge">NEW</span>' : '';
@@ -586,20 +593,23 @@
       const stCls = isCompleted(t.status) ? "과제완료" : t.status;
       const stDot = isCompleted(t.status) ? "완료" : t.status;
       const stLabel = isCompleted(t.status) ? "완료" : t.status;
-      var dateHtml = "";
+      var dateAside = "";
       if (isCompleted(t.status)) {
         var doneD = t.completedDate || t.targetDate;
-        if (doneD) dateHtml = '<span class="org-badge-date"> · ' + doneD + "</span>";
+        if (doneD) {
+          dateAside = '<span class="org-task-date" title="완료일">' + fmtOrgShortDate(doneD) + "</span>";
+        }
       } else if (t.status === "진행중" && t.targetDate) {
-        dateHtml = '<span class="org-badge-date"> · ~' + t.targetDate + "</span>";
+        dateAside = '<span class="org-task-date" title="목표일(까지)">~' + fmtOrgShortDate(t.targetDate) + "</span>";
       }
       return '<div class="org-task-item">'
         + '<span class="org-task-okr">' + t.objId + ' / ' + t.krId + '</span>'
         + '<div class="org-task-info">'
         + nameEl
-        + '<div class="org-task-status">'
-        + '<span class="status-badge ' + stCls + '"><span class="task-status ' + stDot + '"></span>' + stLabel + dateHtml + '</span>'
-        + '</div></div></div>';
+        + '<div class="org-task-meta-row">'
+        + '<span class="status-badge ' + stCls + '"><span class="task-status ' + stDot + '"></span>' + stLabel + "</span>"
+        + dateAside
+        + "</div></div></div>";
     }
 
     function renderOrgCard(team, tasks) {
