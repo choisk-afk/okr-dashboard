@@ -850,6 +850,130 @@ a.kr-task-tag:hover {
   opacity: 0.75;
 }
 
+/* 관리자 참고용 */
+.nav-item-admin {
+  opacity: 0.85;
+  font-size: 13px;
+}
+
+.admin-sources-card .admin-intro {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: #f8f9fb;
+  border-radius: 10px;
+  border-left: 4px solid var(--accent);
+}
+
+.admin-sources-card .admin-intro ul {
+  margin: 10px 0 0 18px;
+  padding: 0;
+}
+
+.admin-sources-card .admin-intro code {
+  font-size: 12px;
+  background: #eef2ff;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.admin-src-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-src-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  background: var(--card-bg);
+}
+
+.admin-src-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.admin-src-menu {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.admin-src-id {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.admin-src-path {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.admin-src-path span {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.admin-src-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.admin-src-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 8px 10px;
+  border-bottom: 2px solid var(--border);
+  width: 32%;
+}
+
+.admin-src-table td {
+  padding: 10px;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: top;
+  line-height: 1.55;
+}
+
+.admin-src-table a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.admin-src-type {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.admin-src-sync {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
 /* AI Report */
 .ai-report-card {
   background: var(--card-bg);

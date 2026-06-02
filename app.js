@@ -157,6 +157,7 @@
     renderPayShareSection();
     renderGiftSection();
     renderCompletionReports();
+    renderAdminSources();
   }
 
   // ─── Overview ───
@@ -623,6 +624,51 @@
 
     const el = document.getElementById("org-view");
     el.innerHTML = '<div class="org-grid">' + Object.entries(teamMap).map(([team, tasks]) => renderOrgCard(team, sortOrgTasks(tasks))).join("") + '</div>';
+  }
+
+  // ─── 관리자 참고용 (데이터 출처) ───
+  function renderAdminSources() {
+    const el = document.getElementById("admin-sources");
+    if (!el) return;
+    const meta = OKR_DATA.adminDataSources;
+    if (!meta || !meta.items) {
+      el.innerHTML = "<div class=\"card\"><p>출처 정보가 없습니다.</p></div>";
+      return;
+    }
+
+    const intro = "<div class=\"admin-intro\">"
+      + "<p>" + (meta.note || "") + "</p>"
+      + "<ul>"
+      + "<li><strong>저장 위치</strong> " + (meta.dataFile || "data.js") + "</li>"
+      + "<li><strong>시트 동기화</strong> <code>" + (meta.syncCommand || "—") + "</code></li>"
+      + "</ul></div>";
+
+    const rows = meta.items.map(function (item) {
+      const srcRows = (item.sources || []).map(function (s) {
+        const link = s.url
+          ? "<a href=\"" + s.url + "\" target=\"_blank\" rel=\"noopener\">" + s.name + "</a>"
+          : s.name;
+        const type = s.type ? "<span class=\"admin-src-type\">" + s.type + "</span>" : "";
+        return "<tr><td>" + link + type + "</td><td>" + (s.detail || "—") + "</td></tr>";
+      }).join("");
+
+      return "<div class=\"admin-src-card\">"
+        + "<div class=\"admin-src-card-head\">"
+        + "<span class=\"admin-src-menu\">" + item.menuLabel + "</span>"
+        + "<code class=\"admin-src-id\">#" + item.sectionId + "</code>"
+        + "</div>"
+        + "<div class=\"admin-src-path\"><span>data.js</span> " + (item.dataPath || "") + "</div>"
+        + "<table class=\"admin-src-table\"><thead><tr><th>원 출처</th><th>설명</th></tr></thead><tbody>"
+        + srcRows + "</tbody></table>"
+        + "<div class=\"admin-src-sync\">갱신: <strong>" + (item.sync || "—") + "</strong></div>"
+        + "</div>";
+    }).join("");
+
+    el.innerHTML = "<div class=\"card admin-sources-card\">"
+      + "<div class=\"card-title\">관리자 참고용 · 데이터 출처</div>"
+      + intro
+      + "<div class=\"admin-src-list\">" + rows + "</div>"
+      + "</div>";
   }
 
   // ─── Payment Share ───

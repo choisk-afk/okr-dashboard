@@ -2471,5 +2471,186 @@ const OKR_DATA = {
         "2Q OKR 리뷰 시 배민페이 점유율 / 포인트 활성화율 trajectory 현실 반영 여부 재점검 권고"
       ]
     }
+  },
+  "adminDataSources": {
+    "note": "LNB 메뉴별 데이터 원천·갱신 방법 (관리자용)",
+    "syncCommand": "node scripts/sync-from-sheets.mjs",
+    "dataFile": "data.js (GitHub push → Pages 자동 배포)",
+    "items": [
+      {
+        "sectionId": "overview",
+        "menuLabel": "개요",
+        "dataPath": "objectives → keyResults[].monthly, tasks[]",
+        "sources": [
+          {
+            "name": "월별 KR 목표·실적",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1ZfCB3XwmRPFRT446uGYrVVT29LdgJ71KlyyPBI4_KpE/edit?gid=1098880899",
+            "detail": "탭 「프로덕트부문의 사본」·Actual col 14~19 / Target col 26~31 (1~6월)"
+          },
+          {
+            "name": "과제 상태·일정",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1j9oC2lhIt0cgOFZ7L-iEtMopsFnFUNaQQZkqxHBaSSU/edit?gid=1293403084",
+            "detail": "탭 「♦️[OKR] 대시보드 1H♦️」·실=결제정산프로덕트실 행만"
+          }
+        ],
+        "sync": "sync-from-sheets.mjs (KR·과제)"
+      },
+      {
+        "sectionId": "okr-detail",
+        "menuLabel": "OKR 상세",
+        "dataPath": "objectives → keyResults (monthly, subKRs, tasks)",
+        "sources": [
+          {
+            "name": "KR·Sub-KR 월별 수치",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1ZfCB3XwmRPFRT446uGYrVVT29LdgJ71KlyyPBI4_KpE/edit?gid=1098880899",
+            "detail": "동일 시트·KR별 고정 행 (예: KR1-1=6행, Sub-KR=7~10행)"
+          },
+          {
+            "name": "OKR 구조·과제 매핑",
+            "type": "Confluence",
+            "url": "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTSERVICES/pages/940769406/26",
+            "detail": "26년 로드맵 기준으로 data.js에 O/KR/과제 구조 수동 정의"
+          },
+          {
+            "name": "과제·링크",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1j9oC2lhIt0cgOFZ7L-iEtMopsFnFUNaQQZkqxHBaSSU/edit?gid=1293403084",
+            "detail": "과제명·상태(col27)·목표일(22)·완료일(23)·기획/실험 링크(31~33)"
+          }
+        ],
+        "sync": "sync-from-sheets.mjs (KR·Sub-KR·과제)"
+      },
+      {
+        "sectionId": "tasks",
+        "menuLabel": "과제 현황",
+        "dataPath": "objectives → keyResults[].tasks",
+        "sources": [
+          {
+            "name": "과제 시트",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1j9oC2lhIt0cgOFZ7L-iEtMopsFnFUNaQQZkqxHBaSSU/edit?gid=1293403084",
+            "detail": "결제정산프로덕트실 과제만·Jira/Wiki 링크 포함"
+          }
+        ],
+        "sync": "sync-from-sheets.mjs (과제)"
+      },
+      {
+        "sectionId": "org-view",
+        "menuLabel": "조직별 현황",
+        "dataPath": "tasks[] + team 필드 (시트 팀명과 동일)",
+        "sources": [
+          {
+            "name": "과제 시트",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1j9oC2lhIt0cgOFZ7L-iEtMopsFnFUNaQQZkqxHBaSSU/edit?gid=1293403084",
+            "detail": "col5 팀·col7 과제명·상태·일정"
+          }
+        ],
+        "sync": "sync-from-sheets.mjs (과제)"
+      },
+      {
+        "sectionId": "ai-report",
+        "menuLabel": "OKR AI 리포트",
+        "dataPath": "aiReports[월]",
+        "sources": [
+          {
+            "name": "월별 분석 문구",
+            "type": "data.js 수동",
+            "url": "",
+            "detail": "KR 실적·과제 현황을 바탕으로 작성·월별 summary/risks/recommendations 직접 편집"
+          },
+          {
+            "name": "참고 수치",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1ZfCB3XwmRPFRT446uGYrVVT29LdgJ71KlyyPBI4_KpE/edit?gid=1098880899",
+            "detail": "리포트 갱신 전 KR 시트 최신화 권장"
+          }
+        ],
+        "sync": "수동 (data.js aiReports)"
+      },
+      {
+        "sectionId": "ar-metrics",
+        "menuLabel": "AR 지표",
+        "dataPath": "arMetrics.methods[]",
+        "sources": [
+          {
+            "name": "Zeppelin (SR/RR/FR)",
+            "type": "Zeppelin",
+            "url": "https://zeppelin-2023.woowa.in/public/#/notebook/2MQ89JBJC",
+            "detail": "결제수단별 SR·RR·FR 월 집계 → AR=SR+RR·수동 입력"
+          },
+          {
+            "name": "KR3-1 전체 AR",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1ZfCB3XwmRPFRT446uGYrVVT29LdgJ71KlyyPBI4_KpE/edit?gid=1098880899",
+            "detail": "KR3-1 결제 성공률(전체)과 별도"
+          }
+        ],
+        "sync": "수동 (data.js arMetrics)"
+      },
+      {
+        "sectionId": "pay-share",
+        "menuLabel": "결제수단 점유율",
+        "dataPath": "paymentShare.methods[].data",
+        "sources": [
+          {
+            "name": "점유율 시트",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1lLx4G2q6K6Oqo07cInITCCx9a68-oC2xfwreljx0N2U/edit?gid=644259344",
+            "detail": "탭 「점유율(금액 기준, 보조결제수단 포함)」·26.1~26.5월 col"
+          },
+          {
+            "name": "점유율 변화 AI 분석",
+            "type": "data.js + Confluence",
+            "url": "https://cloud.wiki.woowa.in/wiki/spaces/GROWTHPLANNING/pages/1058716490/26+4",
+            "detail": "paymentShare.analysis·그로스기획실 월별 프로모션 위키 기반 수동 작성"
+          }
+        ],
+        "sync": "sync-from-sheets.mjs (수치만)·분석 문구 수동"
+      },
+      {
+        "sectionId": "gift-metrics",
+        "menuLabel": "선물하기 지표",
+        "dataPath": "giftMetrics + KR1-3.subKRs (주문수 하위)",
+        "sources": [
+          {
+            "name": "발행금액",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1ZZS_fPvczdZk8EL_yNHcrW3Xp3O1o0nDI1bmsGNmNSc/edit?gid=1358930165",
+            "detail": "탭 「2026 발행금액 목표_2604ver.」"
+          },
+          {
+            "name": "주문수 누적·Sub-KR",
+            "type": "Google Sheet",
+            "url": "https://docs.google.com/spreadsheets/d/1ZfCB3XwmRPFRT446uGYrVVT29LdgJ71KlyyPBI4_KpE/edit?gid=1098880899",
+            "detail": "KR1-3·배민 발행 상품권/외부 교환권 행"
+          },
+          {
+            "name": "AI 리포트(미달성)",
+            "type": "data.js 수동",
+            "url": "",
+            "detail": "giftMetrics.analysis·시트·KR 수치 기반 수동 작성"
+          }
+        ],
+        "sync": "KR1-3는 sync 스크립트·발행금액/분석 수동"
+      },
+      {
+        "sectionId": "completion-reports",
+        "menuLabel": "결정실 완료보고",
+        "dataPath": "completionReports[]",
+        "sources": [
+          {
+            "name": "팀별 완료보고 위키",
+            "type": "Confluence",
+            "url": "https://cloud.wiki.woowa.in/wiki/spaces/PAYMENTSERVICES/overview",
+            "detail": "각 카드 url·요약·하이라이트 수동 등록"
+          }
+        ],
+        "sync": "수동 (data.js completionReports)"
+      }
+    ]
   }
 };
