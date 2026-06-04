@@ -16,6 +16,15 @@ const METRICS_ID = "1ZfCB3XwmRPFRT446uGYrVVT29LdgJ71KlyyPBI4_KpE";
 const TASKS_ID = "1j9oC2lhIt0cgOFZ7L-iEtMopsFnFUNaQQZkqxHBaSSU";
 const METRICS_SHEET = "결정실 okr";
 const PAY_ID = "1lLx4G2q6K6Oqo07cInITCCx9a68-oC2xfwreljx0N2U";
+const GIFT_ID = "1ZZS_fPvczdZk8EL_yNHcrW3Xp3O1o0nDI1bmsGNmNSc";
+const GIFT_SHEET = "2026 발행금액 목표_2604ver.";
+const GIFT_COL_START = 52; // 26년 1월
+const GIFT_ANNUAL_COL = 69;
+
+const AR_METHOD_NAMES = [
+  "전체", "배민페이카드", "배민페이계좌", "배민페이머니",
+  "신용/체크카드", "카카오페이", "네이버페이", "토스페이", "휴대폰"
+];
 
 const MONTH_KEYS = ["2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06"];
 const ACTUAL_COLS = [14, 15, 16, 17, 18, 19];
@@ -242,6 +251,303 @@ function syncPaymentShare(data, payRows) {
   console.log("✓ 결제수단 점유율:", useMonths.join(", "));
 }
 
+function toEok(won) {
+  if (won === null || won === undefined) return null;
+  return Math.round(won / 1e8 * 10) / 10;
+}
+
+function r2(n) {
+  return Math.round(n * 100) / 100;
+}
+
+function calcRate(kr, month) {
+  const d = kr.monthly?.[month];
+  if (!d) return null;
+  const { actual, target } = d;
+  if (kr.isLowerBetter) {
+    if (target === 0) return actual === 0 ? 100 : 0;
+    if (actual <= target) return 100;
+    return r2((target / Math.max(actual, 0.01)) * 100);
+  }
+  if (target === 0) return actual === 0 ? 100 : actual > 0 ? 100 : 0;
+  return r2((actual / target) * 100);
+}
+
+function getAllKRs(data) {
+  const krs = [];
+  data.objectives.forEach((obj) => {
+    obj.keyResults.forEach((kr) => {
+      krs.push({ ...kr, objId: obj.id, objTitle: obj.title });
+    });
+  });
+  return krs;
+}
+
+function findKr(data, id) {
+  for (const obj of data.objectives) {
+    const kr = obj.keyResults.find((k) => k.id === id);
+    if (kr) return kr;
+  }
+  return null;
+}
+
+function monthLabelKo(m) {
+  const [, mm] = m.split("-");
+  return `${parseInt(mm, 10)}월`;
+}
+
+function fmtRate(r) {
+  return r === null ? "-" : r.toFixed(2) + "%";
+}
+
+function giftCell(rows, rowIdx, monthIndex) {
+  const col = GIFT_COL_START + monthIndex;
+  const raw = rows[rowIdx]?.[col];
+  const n = toNum(raw);
+  return n !== null ? toEok(n) : null;
+}
+
+function syncGiftMetrics(data, giftRows) {
+  const months = data.months.filter((_, i) => giftCell(giftRows, 6, i) !== null);
+  const defs = [
+    { name: "발행금액 전체", row: 6 },
+    { name: "B2C (배민앱&PC)", row: 11 },
+    { name: "B2B2C (카카오)", row: 13 },
+    { name: "B2B (직접&대행)", row: 12 },
+    { name: "B2B2C (그외채널)", row: 14 }
+  ];
+
+  const metrics = defs.map((def) => {
+    const annualWon = toNum(giftRows[def.row]?.[GIFT_ANNUAL_COL]);
+    const monthly = {};
+    months.forEach((m, i) => {
+      const v = giftCell(giftRows, def.row, data.months.indexOf(m));
+      if (v !== null) monthly[m] = { actual: v };
+    });
+    return {
+      name: def.name,
+      unit: "억원",
+      annualTarget: annualWon ? toEok(annualWon) : null,
+      monthly
+    };
+  });
+
+  const kr13 = findKr(data, "KR1-3");
+  const orderMonthly = {};
+  months.forEach((m) => {
+    const d = kr13?.monthly?.[m];
+    if (!d) return;
+    orderMonthly[m] = {
+      target: Math.round(d.target / 10000) / 100,
+      actual: Math.round(d.actual / 10000) / 100
+    };
+  });
+
+  data.giftMetrics = {
+    annualTarget: toNum(giftRows[6]?.[GIFT_ANNUAL_COL]) || data.giftMetrics?.annualTarget || 0,
+    months,
+    metrics,
+    orderCount: {
+      name: "선물하기 주문수 (누적)",
+      unit: "만건",
+      annualTarget: kr13 ? Math.round(kr13.annualTarget / 10000) / 100 : 5680,
+      monthly: orderMonthly
+    },
+    analysis: buildGiftAnalysis(data, months, metrics, orderMonthly)
+  };
+  console.log("✓ 선물하기 지표:", months.join(", "));
+}
+
+function buildGiftAnalysis(data, months, metrics, orderMonthly) {
+  const analysis = {};
+  const total = metrics.find((m) => m.name === "발행금액 전체");
+  const kakao = metrics.find((m) => m.name === "B2B2C (카카오)");
+  const b2c = metrics.find((m) => m.name === "B2C (배민앱&PC)");
+
+  months.forEach((m, idx) => {
+    const gaps = [];
+    const ml = monthLabelKo(m);
+    const oc = orderMonthly[m];
+    const ocRate = oc && oc.target > 0 ? r2((oc.actual / oc.target) * 100) : null;
+    const totalActual = total?.monthly?.[m]?.actual;
+    const proRate = Math.round((idx + 1) / 12 * 1000) / 10;
+    const ytd = metrics[0]?.monthly
+      ? months.slice(0, idx + 1).reduce((s, mo) => s + (total.monthly[mo]?.actual || 0), 0)
+      : null;
+    const annualTarget = total?.annualTarget;
+    const ytdPct = ytd && annualTarget ? r2((ytd / annualTarget) * 100) : null;
+
+    if (ocRate !== null && ocRate < 90) {
+      gaps.push({
+        title: "주문수 누적 — 목표 대비 미달",
+        detail: `${ml} 누적 실적 ${oc.actual}만건 / 목표 ${oc.target}만건 (${ocRate}%). KR1-3·선물하기 과제 진행 현황과 교차 확인 필요.`
+      });
+    }
+    if (ytdPct !== null && ytdPct < proRate * 0.9) {
+      gaps.push({
+        title: "발행금액 전체 — 연간 진도율 하회",
+        detail: `YTD ${ytd?.toFixed(1)}억 (연간목표 대비 ${ytdPct}%, ${idx + 1}월 기준선 ${proRate}%). 채널별 편차 확인 필요.`
+      });
+    }
+    if (kakao?.monthly?.[m] && idx > 0) {
+      const prev = months[idx - 1];
+      const cur = kakao.monthly[m].actual;
+      const prevV = kakao.monthly[prev]?.actual;
+      if (prevV && cur < prevV) {
+        gaps.push({
+          title: "B2B2C(카카오) — 전월 대비 하락",
+          detail: `${prevV}억 → ${cur}억. 제휴·프로모션 일정과 대조 필요.`
+        });
+      }
+    }
+    if (b2c?.monthly?.[m] && idx > 0) {
+      const prev = months[idx - 1];
+      const cur = b2c.monthly[m].actual;
+      const prevV = b2c.monthly[prev]?.actual;
+      if (prevV && cur > prevV * 1.15) {
+        gaps.push({
+          title: "B2C — 전월 대비 반등",
+          detail: `${prevV}억 → ${cur}억. 앱·PC 채널 개선 신호로 해석 가능.`
+        });
+      }
+    }
+
+    const summaryParts = [];
+    if (ocRate !== null) summaryParts.push(`누적 주문수 달성률 ${ocRate}%`);
+    if (totalActual !== null) summaryParts.push(`발행금액 ${totalActual}억`);
+    analysis[m] = {
+      summary: `${ml} 선물하기 지표: ${summaryParts.join(", ") || "데이터 확인"}. (자동 생성·${GIFT_SHEET}·KR1-3 기준)`,
+      gaps
+    };
+  });
+  return analysis;
+}
+
+function syncArMetrics(data) {
+  const months = data.months;
+  const kr31 = findKr(data, "KR3-1");
+  const overall = {};
+  months.forEach((m) => {
+    if (kr31?.monthly?.[m]) overall[m] = kr31.monthly[m].actual;
+  });
+
+  const prevMethods = data.arMetrics?.methods || [];
+  const methods = AR_METHOD_NAMES.map((name) => {
+    const prev = prevMethods.find((m) => m.name === name) || {};
+    const blank = {};
+    months.forEach((m) => { blank[m] = null; });
+    return {
+      name,
+      sr: { ...blank, ...(prev.sr || {}) },
+      rr: { ...blank, ...(prev.rr || {}) },
+      fr: { ...blank, ...(prev.fr || {}) },
+      ar: { ...blank, ...(prev.ar || {}) }
+    };
+  });
+
+  // 전체 AR은 KR3-1 실적으로 채움 (수단별 SR/RR/FR은 Zeppelin 수동)
+  const all = methods.find((m) => m.name === "전체");
+  if (all) {
+    months.forEach((m) => {
+      if (overall[m] != null) all.ar[m] = overall[m];
+    });
+  }
+
+  data.arMetrics = {
+    description: data.arMetrics?.description || "결제수단별 AR(Authorization Rate) — 결제 성공률 (AR = SR + RR)",
+    source: data.arMetrics?.source || "Zeppelin SR/RR/FR 노트북 (수단별) + KR3-1(전체 AR)",
+    note: data.arMetrics?.note || "데이터 기준: 월별 집계 / 보조결제수단 제외 / B2B 제외 / AR = SR + RR",
+    months,
+    overall,
+    methods
+  };
+  console.log("✓ AR 지표: 전체 AR", months.join(", "), "(수단별 SR/RR/FR은 Zeppelin 수동)");
+}
+
+function buildAiReports(data) {
+  const reports = {};
+  data.months.forEach((month) => {
+    const krs = getAllKRs(data);
+    const rated = krs
+      .map((kr) => ({ kr, rate: calcRate(kr, month) }))
+      .filter((x) => x.rate !== null);
+
+    const onTrack = rated.filter((x) => x.rate >= 90);
+    const atRisk = rated.filter((x) => x.rate >= 70 && x.rate < 90);
+    const offTrack = rated.filter((x) => x.rate < 70);
+
+    const achievements = onTrack.slice(0, 5).map(({ kr, rate }) => {
+      const d = kr.monthly[month];
+      const short = kr.title.length > 36 ? kr.title.slice(0, 36) + "…" : kr.title;
+      return `${short} — 달성률 ${fmtRate(rate)} (실적 ${d.actual} / 목표 ${d.target})`;
+    });
+
+    const risks = [...offTrack, ...atRisk].slice(0, 6).map(({ kr, rate }) => {
+      const d = kr.monthly[month];
+      const short = kr.title.length > 32 ? kr.title.slice(0, 32) + "…" : kr.title;
+      return `${short} — 달성률 ${fmtRate(rate)} (실적 ${d.actual} / 목표 ${d.target})`;
+    });
+
+    const recommendations = offTrack.slice(0, 3).map(({ kr }) => {
+      const pending = (kr.tasks || []).filter((t) => t.status === "진행중" || t.status === "계획중");
+      const taskHint = pending.length ? ` 관련 과제 ${pending.length}건(진행/계획) 일정 점검.` : "";
+      return `${kr.id} ${kr.title.slice(0, 40)}… — 미달 원인 분석 및 액션플랜 수립.${taskHint}`;
+    });
+    if (recommendations.length === 0 && atRisk.length) {
+      recommendations.push(`${atRisk[0].kr.id} 주의 구간 — 목표 대비 추이 모니터링 및 2주 내 중간 점검.`);
+    }
+
+    const ml = monthLabelKo(month);
+    reports[month] = {
+      summary: `${ml} OKR 자동 분석: 순항 ${onTrack.length}건 / 주의 ${atRisk.length}건 / 미달 ${offTrack.length}건 (KR ${rated.length}개 기준·결정실 okr 시트·과제 시트 동기화 데이터).`,
+      achievements: achievements.length ? achievements : ["해당 월 목표 달성(90%+) KR 없음 — 세부 수치 확인 필요."],
+      risks: risks.length ? risks : ["주요 리스크 KR 없음 — 전체 순항 구간."],
+      recommendations: recommendations.length ? recommendations : ["현 추세 유지 — 다음 월 목표 페이스 점검."]
+    };
+  });
+  data.aiReports = reports;
+  console.log("✓ OKR AI 리포트:", data.months.join(", "));
+}
+
+function appendPayShareAnalysis(data) {
+  if (!data.paymentShare?.methods?.length) return;
+  const months = data.paymentShare.months || [];
+  if (!data.paymentShare.analysis) data.paymentShare.analysis = {};
+  const existing = data.paymentShare.analysis;
+
+  months.forEach((month, idx) => {
+    if (idx === 0 || existing[month]) return;
+    const prev = months[idx - 1];
+    const changes = [];
+    data.paymentShare.methods.forEach((m) => {
+      const cur = m.data[month];
+      const pv = m.data[prev];
+      if (cur == null || pv == null) return;
+      const delta = r2(cur - pv);
+      if (Math.abs(delta) < 0.05) return;
+      const sign = delta > 0 ? "+" : "";
+      changes.push({
+        method: m.name,
+        delta: `${sign}${delta.toFixed(2)}%p (${pv.toFixed(2)}% → ${cur.toFixed(2)}%)`,
+        reason: `${monthLabelKo(month)} 전월 대비 점유율 변화. 프로모션·결제수단 정책 등은 그로스기획실 월별 위키와 교차 확인 필요.`
+      });
+    });
+    changes.sort((a, b) => {
+      const bamin = ["배민페이(전체)", "배민페이카드", "배민페이머니", "배민페이계좌"];
+      const ai = bamin.indexOf(a.method), bi = bamin.indexOf(b.method);
+      if (ai !== -1 && bi !== -1) return ai - bi;
+      if (ai !== -1) return -1;
+      if (bi !== -1) return 1;
+      return Math.abs(parseFloat(b.delta)) - Math.abs(parseFloat(a.delta));
+    });
+    existing[month] = {
+      summary: `${monthLabelKo(month)} 전월 대비 주요 결제수단 점유율 변화 요약 (점유율 시트 기준·자동 생성).`,
+      changes: changes.slice(0, 8)
+    };
+  });
+  console.log("✓ 점유율 AI 분석: 신규 월만 자동 보충");
+}
+
 function writeData(data) {
   const out = "const OKR_DATA = " + JSON.stringify(data, null, 2) + ";\n";
   fs.writeFileSync(path.join(ROOT, "data.js"), out, "utf8");
@@ -252,11 +558,16 @@ function main() {
   const mRows = gwsGet(METRICS_ID, `'${METRICS_SHEET}'!A1:AL44`);
   const tRows = gwsGet(TASKS_ID, "'♦️[OKR] 대시보드 1H♦️'!A1:AZ700");
   const payRows = gwsGet(PAY_ID, "'점유율(금액 기준, 보조결제수단 포함)'!A1:AZ25");
+  const giftRows = gwsGet(GIFT_ID, `'${GIFT_SHEET}'!A1:BZ25`);
 
   const data = loadData();
   syncMetrics(data, mRows);
   syncTasks(data, tRows);
   syncPaymentShare(data, payRows);
+  syncGiftMetrics(data, giftRows);
+  syncArMetrics(data);
+  buildAiReports(data);
+  appendPayShareAnalysis(data);
   writeData(data);
   console.log("data.js 저장 완료");
 }
