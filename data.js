@@ -297,6 +297,10 @@ const OKR_DATA = {
             "2026-04": {
               "actual": 14593623,
               "target": 16263700
+            },
+            "2026-05": {
+              "actual": 18666412,
+              "target": 20937580
             }
           },
           "subKRs": [
@@ -318,6 +322,10 @@ const OKR_DATA = {
                 "2026-04": {
                   "a": 14285279,
                   "t": 15674000
+                },
+                "2026-05": {
+                  "a": 18253669,
+                  "t": 19958000
                 }
               }
             },
@@ -339,6 +347,10 @@ const OKR_DATA = {
                 "2026-04": {
                   "a": 308344,
                   "t": 589700
+                },
+                "2026-05": {
+                  "a": 412743,
+                  "t": 979580
                 }
               }
             }
@@ -742,6 +754,10 @@ const OKR_DATA = {
             "2026-04": {
               "actual": 0,
               "target": 333
+            },
+            "2026-05": {
+              "actual": 0,
+              "target": 416
             }
           },
           "tasks": []
@@ -884,6 +900,10 @@ const OKR_DATA = {
                 "2026-04": {
                   "a": 1806,
                   "t": 1620
+                },
+                "2026-05": {
+                  "a": 2052,
+                  "t": 1820
                 }
               }
             }
@@ -1176,6 +1196,10 @@ const OKR_DATA = {
             "2026-04": {
               "actual": 23.33,
               "target": 48.21
+            },
+            "2026-05": {
+              "actual": 32.26,
+              "target": 48.21
             }
           },
           "tasks": [
@@ -1320,20 +1344,24 @@ const OKR_DATA = {
           "baselineLabel": "25년 $1,397,335",
           "monthly": {
             "2026-01": {
-              "actual": 116172,
-              "target": 104800
+              "actual": 156788,
+              "target": 132667
             },
             "2026-02": {
-              "actual": 220358,
-              "target": 209600
+              "actual": 297633,
+              "target": 265334
             },
             "2026-03": {
-              "actual": 330763,
-              "target": 314400
+              "actual": 442618,
+              "target": 398001
             },
             "2026-04": {
-              "actual": 438595.46,
-              "target": 419200
+              "actual": 575599,
+              "target": 530668
+            },
+            "2026-05": {
+              "actual": 706492,
+              "target": 663335
             }
           },
           "tasks": [
@@ -2486,7 +2514,7 @@ const OKR_DATA = {
             "name": "월별 KR 목표·실적",
             "type": "Google Sheet",
             "url": "https://docs.google.com/spreadsheets/d/1ZfCB3XwmRPFRT446uGYrVVT29LdgJ71KlyyPBI4_KpE/edit?gid=1098880899",
-            "detail": "탭 「프로덕트부문의 사본」·Actual col 14~19 / Target col 26~31 (1~6월)"
+            "detail": "탭 「결정실 okr」·Actual col 14~19 / Target col 26~31 (1~6월)"
           },
           {
             "name": "과제 상태·일정",

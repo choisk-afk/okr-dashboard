@@ -14,6 +14,7 @@ const GWS = process.env.GWS_BIN || "/Users/woowahan/.claude/plugins/cache/woowa-
 
 const METRICS_ID = "1ZfCB3XwmRPFRT446uGYrVVT29LdgJ71KlyyPBI4_KpE";
 const TASKS_ID = "1j9oC2lhIt0cgOFZ7L-iEtMopsFnFUNaQQZkqxHBaSSU";
+const METRICS_SHEET = "결정실 okr";
 const PAY_ID = "1lLx4G2q6K6Oqo07cInITCCx9a68-oC2xfwreljx0N2U";
 
 const MONTH_KEYS = ["2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06"];
@@ -248,7 +249,7 @@ function writeData(data) {
 
 function main() {
   console.log("시트 동기화 시작…");
-  const mRows = gwsGet(METRICS_ID, "프로덕트부문의 사본!A1:AL44");
+  const mRows = gwsGet(METRICS_ID, `'${METRICS_SHEET}'!A1:AL44`);
   const tRows = gwsGet(TASKS_ID, "'♦️[OKR] 대시보드 1H♦️'!A1:AZ700");
   const payRows = gwsGet(PAY_ID, "'점유율(금액 기준, 보조결제수단 포함)'!A1:AZ25");
 
