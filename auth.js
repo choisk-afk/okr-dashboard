@@ -1,13 +1,11 @@
 (function () {
-  const ALLOWED = [
-    "jinyr@woowahan.com",
-    "kate@woowahan.com",
-    "mhcho@woowahan.com",
-    "donggun.ahn@woowahan.com",
-    "owen@woowahan.com",
-    "jungchol.kwon@woowahan.com",
-    "choisk@woowahan.com"
-  ].map(e => e.toLowerCase());
+  const ALLOWED_DOMAIN = "woowahan.com";
+
+  function isAllowedEmail(email) {
+    const parts = (email || "").trim().toLowerCase().split("@");
+    if (parts.length !== 2 || !parts[0] || !parts[1]) return false;
+    return parts[1] === ALLOWED_DOMAIN;
+  }
 
   const KEY = "okr_auth_email";
   const overlay = document.getElementById("auth-overlay");
@@ -54,12 +52,12 @@
       return;
     }
 
-    if (ALLOWED.includes(email)) {
+    if (isAllowedEmail(email)) {
       localStorage.setItem(KEY, email);
       errEl.style.display = "none";
       grant();
     } else {
-      errEl.textContent = "접근 권한이 없는 이메일입니다. 관리자에게 문의하세요.";
+      errEl.textContent = "결제정산프로덕트실 최성길 님에게 문의하세요.";
       errEl.style.display = "block";
       input.focus();
     }
@@ -67,7 +65,7 @@
 
   // 페이지 로드 시 인증 확인
   const saved = localStorage.getItem(KEY);
-  if (saved && ALLOWED.includes(saved.toLowerCase())) {
+  if (saved && isAllowedEmail(saved)) {
     grant();
   } else {
     deny();
