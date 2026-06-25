@@ -74,11 +74,13 @@
     }
   };
 
-  const saved = localStorage.getItem(KEY);
-  if (saved && isAllowedEmail(saved)) {
-    grant();
-  } else {
-    if (saved) localStorage.removeItem(KEY);
-    deny();
-  }
+  window.__initAuth = function () {
+    const saved = localStorage.getItem(KEY);
+    if (saved && isAllowedEmail(saved)) {
+      grant();
+    } else {
+      if (saved) localStorage.removeItem(KEY);
+      deny();
+    }
+  };
 })();

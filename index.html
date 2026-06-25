@@ -146,6 +146,7 @@
           loadScript("app.js", function () {});
         });
       };
+      if (typeof window.__initAuth === "function") window.__initAuth();
     });
   }
 
