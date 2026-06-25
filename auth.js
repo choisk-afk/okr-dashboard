@@ -1,25 +1,36 @@
 (function () {
-  const ALLOWED_DOMAIN = "woowahan.com";
-
-  function isAllowedEmail(email) {
-    const parts = (email || "").trim().toLowerCase().split("@");
-    if (parts.length !== 2 || !parts[0] || !parts[1]) return false;
-    return parts[1] === ALLOWED_DOMAIN;
-  }
+  const ALLOWED = ["choisk@woowahan.com"];
 
   const KEY = "okr_auth_email";
   const overlay = document.getElementById("auth-overlay");
-  const body = document.querySelector("body > aside, body > main");
+  let appBooted = false;
+
+  function isAllowedEmail(email) {
+    return ALLOWED.includes((email || "").trim().toLowerCase());
+  }
+
+  function bootApp() {
+    if (appBooted) return;
+    appBooted = true;
+    if (typeof window.__loadDashboardApp === "function") {
+      window.__loadDashboardApp();
+    }
+  }
 
   function grant() {
     overlay.style.display = "none";
-    document.querySelectorAll(".sidebar, .main-content").forEach(el => el.style.display = "");
+    document.querySelectorAll(".sidebar, .main-content").forEach((el) => {
+      el.style.display = "";
+    });
     addLogoutBtn();
+    bootApp();
   }
 
   function deny() {
     overlay.style.display = "flex";
-    document.querySelectorAll(".sidebar, .main-content").forEach(el => el.style.display = "none");
+    document.querySelectorAll(".sidebar, .main-content").forEach((el) => {
+      el.style.display = "none";
+    });
   }
 
   function addLogoutBtn() {
@@ -30,8 +41,8 @@
     btn.id = "logout-btn";
     btn.textContent = "로그아웃";
     btn.style.cssText = "margin:auto 12px 20px;padding:9px 14px;background:rgba(255,255,255,.07);color:#a0a4ab;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;width:calc(100% - 24px);text-align:left;";
-    btn.onmouseover = () => btn.style.background = "rgba(255,255,255,.12)";
-    btn.onmouseout = () => btn.style.background = "rgba(255,255,255,.07)";
+    btn.onmouseover = () => { btn.style.background = "rgba(255,255,255,.12)"; };
+    btn.onmouseout = () => { btn.style.background = "rgba(255,255,255,.07)"; };
     btn.onclick = () => { localStorage.removeItem(KEY); location.reload(); };
 
     const emailLabel = document.createElement("div");
@@ -57,17 +68,17 @@
       errEl.style.display = "none";
       grant();
     } else {
-      errEl.textContent = "결제정산프로덕트실 최성길 님에게 문의하세요.";
+      errEl.textContent = "접근 권한이 없습니다.";
       errEl.style.display = "block";
       input.focus();
     }
   };
 
-  // 페이지 로드 시 인증 확인
   const saved = localStorage.getItem(KEY);
   if (saved && isAllowedEmail(saved)) {
     grant();
   } else {
+    if (saved) localStorage.removeItem(KEY);
     deny();
   }
 })();

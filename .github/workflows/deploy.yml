@@ -1,24 +1,15 @@
+# 공개 GitHub Pages 배포 중단 (OKR 데이터 보안)
+# 로컬 사용: 프로젝트 폴더에서 python3 -m http.server 8080 후 http://localhost:8080
 name: Deploy to GitHub Pages
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
   pages: write
   id-token: write
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    if: false
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: 배포마다 고유 build-id 생성 (브라우저가 새 HTML·자산 받도록 자동 갱신에 사용)
-        run: echo "${{ github.run_id }}-${{ github.sha }}" > build-id.txt
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - run: echo "Public deploy disabled for security."
